@@ -1,6 +1,6 @@
 # MCP Stock Analyst 📈
 
-[English](#english) | [简体中文](#简体中文)
+[English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文)
 
 ---
 
@@ -257,5 +257,134 @@ Actor 定义（`.actor/actor.json`）已启用 **Standby 模式**，MCP 路径 `
 - [ ] 自定义 API key 鉴权层（自托管时用）
 
 ## 许可证
+
+MIT
+
+---
+
+<a name="繁體中文"></a>
+
+# MCP Stock Analyst（繁體中文）
+
+一個提供 **A股 / 港股 / 美股 / 台股** 行情資料的 MCP (Model Context Protocol) 伺服器——即時報價、智慧搜尋、歷史K線。
+
+- **零成本資料源**：A股/港股/美股使用騰訊免費公開行情介面，台股使用 Yahoo Finance，皆無需 API key，無配額限制
+- **三個實用工具**：即時報價（單次最多 10 個標的）、智慧搜尋（中文名稱/拼音/代碼）、歷史K線
+- **雙傳輸模式**：`stdio`（本機桌面用戶端）+ `Streamable HTTP`（Apify Standby 遠端託管）
+- **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次計費，無訂閱
+
+## 工具列表
+
+| 工具 | 功能 | 範例輸入 |
+|---|---|---|
+| `get_quote` | 即時報價（A股/港股/美股/台股，單次最多10個） | `600519,00700,AAPL,2330.TW` |
+| `search_stock` | 智慧搜尋代碼/名稱/拼音 | `茅台` / `GZMT` / `NVIDIA` / `台積電` / `TSMC` |
+| `get_kline` | 歷史K線（日/週/月，20–640 根） | `600519` 或 `2330.TW`，period=`day` |
+
+### 台灣股票代碼格式
+
+台股（TWSE 上市 / TPEx 上櫃）使用 Yahoo Finance 資料源，支援以下輸入格式：
+
+- `2330.TW` —— 上市股票（顯式指定）
+- `5483.TWO` —— 上櫃股票（顯式指定）
+- `tw2330` —— 簡寫；伺服器自動探測交易所（先試 `.TW`，再試 `.TWO`）
+- `^TWII` —— 台灣加權指數（TAIEX）
+
+## 連接方式（推薦：雲端端點）
+
+任意 MCP 用戶端透過 `mcp-remote` 連接雲端端點：
+
+```json
+{
+  "mcpServers": {
+    "stock-analyst": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote",
+        "https://neeenja--mcp-stock-analyst.apify.actor/mcp",
+        "--header", "Authorization: Bearer ${APIFY_TOKEN}"
+      ],
+      "env": { "APIFY_TOKEN": "<你的-Apify-token>" }
+    }
+  }
+}
+```
+
+token 在 Apify Console → **Settings → API & Integrations** 取得。
+
+### 或本機執行（stdio 模式）
+
+```bash
+git clone https://github.com/PanStories/mcp-stock-analyst
+cd mcp-stock-analyst
+npm install && npm run build
+```
+
+```json
+{
+  "mcpServers": {
+    "stock-analyst": {
+      "command": "node",
+      "args": ["C:\\path\\to\\mcp-stock-analyst\\build\\index.js"]
+    }
+  }
+}
+```
+
+### 本機除錯
+
+```bash
+npx @modelcontextprotocol/inspector node build/index.js   # 互動式除錯介面
+node e2e-test.mjs        # stdio 協定端對端測試
+node http-e2e-test.mjs   # 本機 HTTP 端對端測試
+```
+
+## 計費（按事件付費）
+
+無訂閱、無月費，按工具呼叫次數收費：
+
+| 事件 | 觸發時機 | 單價 |
+|---|---|---|
+| `tool-call`（主事件） | 每次行情資料呼叫：`get_quote` / `get_kline` | **$0.02** |
+| `search-call` | 每次標的檢索：`search_stock` | **$0.005** |
+
+**永遠免費：** MCP 握手（`initialize`）和 `tools/list`——探索類請求不計費。
+
+每個 Apify 帳號每月自帶 **$5 平台免費額度**（按 $0.02/次約 250 次報價呼叫），輕度用戶實際等於免費用。
+
+## HTTP 端點（遠端模式）
+
+| 方法 | 路徑 | 說明 |
+|---|---|---|
+| POST | `/mcp` | MCP 協定端點（無狀態 Streamable HTTP） |
+| GET | `/health` | 健康檢查 |
+| GET | `/` | 服務資訊；回應 Apify 容器就緒探測 |
+
+## 部署你自己的實例
+
+```bash
+npm install -g apify-cli
+apify login
+cd mcp-stock-analyst
+apify push             # 在 Apify 平台側建置 Docker 映像檔
+```
+
+Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `/mcp`。端點形如 `https://<username>--mcp-stock-analyst.apify.actor/mcp`（以 Console → Endpoints 頁為準）。
+
+## 技術棧
+
+- Node.js ≥ 18、TypeScript、官方 `@modelcontextprotocol/sdk`
+- 資料源：騰訊公開行情介面（A股/港股/美股，免費無 key）+ Yahoo Finance chart 介面（台股，免費無 key）
+- 多階段 Docker 建置（`node:20-alpine`）
+
+## 路線圖
+
+- [x] 按事件計費
+- [x] 台灣市場支援（TWSE / TPEx / 加權指數，Yahoo Finance 資料源）
+- [ ] 資金流向 / 龍虎榜
+- [ ] 財報摘要
+- [ ] 自訂 API key 驗證層（自架時用）
+
+## 授權條款
 
 MIT
