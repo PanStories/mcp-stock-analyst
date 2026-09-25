@@ -130,9 +130,28 @@ Standby 端点需要 Apify API token 认证，最省事的方式是通过 `mcp-r
 
 token 在 Apify Console → **Settings → API & Integrations** 获取。
 
-### 6. 变现（可选）
+### 6. 计费（Pay Per Event）
 
-Apify 支持 **Pay Per Event** 计费：在 Actor 的 Monetization 设置里定义事件（例如每次工具调用 $0.05），并在代码中触发计费事件。当前版本未接入计费，如需按次收费可在此基础上加一层。
+本 server 已接入 Apify **Pay Per Event** 计费，按工具调用次数收费，无订阅、无月费。
+
+| 事件名 | 触发时机 | 单价 |
+|---|---|---|
+| `tool-call`（主事件） | 每次行情数据调用：`get_quote` / `get_kline` | **$0.02** |
+| `search-call` | 每次标的检索：`search_stock` | **$0.005** |
+
+**不收钱的部分（重要）：** MCP 握手（`initialize`）和 `tools/list` 永远免费。客户端必须先能列出工具才谈得上使用，对发现类请求计费等于直接劝退用户。
+
+**关于上游数据的成本结构：** 行情数据来自腾讯公开接口，本身零成本、无配额限制；用户付的是「随时可用 + 免维护 + 免申请 key」的便利，以及 A股/港股/美股三市场统一接口的封装。定价对齐了 Apify Store 上同类金融 MCP 的公开价位（$0.01–$0.05/次调用）。
+
+**免费额度：** Apify 每个账号每月自带 $5 平台额度，按 $0.02/次算约等于每月 250 次免费行情调用；免费额度用尽后才会真正产生费用。首次设置价格有 14 天公示期，公示期内不向用户收费。
+
+代码侧的三个约束（都在 `src/billing.ts` 里）：
+
+1. **计费发生在工具执行之前**——上游请求一旦发出成本就已产生，等返回再收费，遇超时/报错就白干。
+2. **计费失败不阻断服务**——`Actor.charge()` 异常只记日志，不会让用户吃到 500。
+3. **消费上限触顶时优雅退出**——返回明确的 JSON-RPC 错误（含当前单价与提额方式），不伪装成系统故障。
+
+> 事件名必须三处一致：`src/billing.ts` 的 `TOOL_EVENT_MAP` ↔ `.actor/pay_per_event.json` ↔ Apify Console 的 Monetization 设置。改价只改 Console（Console 是唯一账单来源，`pay_per_event.json` 只是参考 schema）。
 
 ## 其他分发渠道（可选）
 
@@ -166,9 +185,9 @@ Dockerfile                 # Apify 构建用镜像
 
 ## 路线图（后续可加）
 
+- [x] Apify Pay Per Event 计费层（`tool-call` / `search-call`）
 - [ ] 资金流向 / 龙虎榜（akshare）
 - [ ] 财报摘要工具
-- [ ] Apify Pay Per Event 计费层
 - [ ] 自定义 API key 鉴权层（自托管时用）
 
 ## License

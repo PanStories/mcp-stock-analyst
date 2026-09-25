@@ -1,0 +1,12 @@
+{
+  "tool-call": {
+    "eventTitle": "Market data call",
+    "eventDescription": "Charged once per market-data tool call: real-time quote (get_quote) or historical K-line (get_kline).",
+    "eventPriceUsd": 0.02
+  },
+  "search-call": {
+    "eventTitle": "Symbol lookup",
+    "eventDescription": "Charged once per symbol/name lookup (search_stock) used to resolve a ticker or stock name.",
+    "eventPriceUsd": 0.005
+  }
+}

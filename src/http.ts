@@ -11,18 +11,30 @@
  *   GET  /health  健康检查
  *   GET  /        Apify 容器就绪探针（必须响应，否则 standby run 永不 ready）
  *
+ * 计费：POST /mcp 上的 tools/call 会触发 Pay-per-event 计费（见 src/billing.ts），
+ *       本地运行（非 Apify 平台）自动跳过。
+ *
  * 端口：ACTOR_WEB_SERVER_PORT > APIFY_CONTAINER_PORT > PORT > 3000
  */
 
 import { createServer as createHttpServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { Actor, log } from 'apify';
 import { createServer } from './server.js';
+import { chargeToolCall, SPENDING_LIMIT_MESSAGE } from './billing.js';
 
 const PORT = Number(
   process.env.ACTOR_WEB_SERVER_PORT ?? process.env.APIFY_CONTAINER_PORT ?? process.env.PORT ?? 3000
 );
 const HOST = process.env.HOST ?? '0.0.0.0';
 const MCP_PATH = '/mcp';
+
+// Apify 平台内必须 init（计费、存储依赖它）；平台外保持零副作用，方便本地调试
+const AT_HOME = Actor.isAtHome();
+if (AT_HOME) {
+  await Actor.init();
+  log.info('[mcp-stock-analyst] Apify Actor initialized — pay-per-event billing is ON');
+}
 
 function sendJson(
   res: ServerResponse,
@@ -50,6 +62,31 @@ async function readJsonBody(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(raw);
 }
 
+/**
+ * 对本次请求里的 tools/call 计费。
+ * 返回 true 表示消费上限已触顶、调用方应当中止（已写出错误响应）。
+ */
+async function billToolCalls(res: ServerResponse, body: unknown): Promise<boolean> {
+  const messages = Array.isArray(body) ? body : [body];
+
+  for (const message of messages) {
+    const msg = message as { method?: string; id?: unknown; params?: { name?: string } } | null;
+    if (!msg || msg.method !== 'tools/call') continue;
+
+    const outcome = await chargeToolCall(msg.params?.name ?? '');
+    if (outcome.limitReached) {
+      sendJson(res, 200, {
+        jsonrpc: '2.0',
+        id: msg.id ?? null,
+        error: { code: -32001, message: SPENDING_LIMIT_MESSAGE },
+      });
+      return true;
+    }
+  }
+
+  return false;
+}
+
 const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
   const path = url.pathname.replace(/\/+$/, '') || '/';
@@ -63,17 +100,18 @@ const httpServer = createHttpServer(async (req, res) => {
     }
     sendJson(res, 200, {
       name: 'mcp-stock-analyst',
-      version: '0.1.0',
+      version: '0.1.1',
       transport: 'streamable-http',
       mcpEndpoint: MCP_PATH,
       health: '/health',
       tools: ['get_quote', 'search_stock', 'get_kline'],
+      pricing: { 'tool-call': '$0.02', 'search-call': '$0.005' },
     });
     return;
   }
 
   if (path === '/health') {
-    sendJson(res, 200, { status: 'ok', uptime: Math.round(process.uptime()) });
+    sendJson(res, 200, { status: 'ok', uptime: Math.round(process.uptime()), billing: AT_HOME });
     return;
   }
 
@@ -99,6 +137,10 @@ const httpServer = createHttpServer(async (req, res) => {
 
     try {
       const body = await readJsonBody(req);
+
+      // 计费（仅 tools/call，发现类请求免费）；上限触顶则直接返回明确提示
+      if (await billToolCalls(res, body)) return;
+
       // 无状态：每个请求一套独立的 server + transport，天然支持并发与冷启动
       const server = createServer();
       const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
@@ -126,7 +168,7 @@ const httpServer = createHttpServer(async (req, res) => {
 
 httpServer.listen(PORT, HOST, () => {
   console.log(`[mcp-stock-analyst] Streamable HTTP server listening on http://${HOST}:${PORT}${MCP_PATH}`);
-  console.log(`[mcp-stock-analyst] standby=${process.env.APIFY_META_ORIGIN ?? 'local'}`);
+  console.log(`[mcp-stock-analyst] standby=${process.env.APIFY_META_ORIGIN ?? 'local'} billing=${AT_HOME}`);
 });
 
 function shutdown(signal: string) {
