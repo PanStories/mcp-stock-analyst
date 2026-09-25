@@ -37,7 +37,10 @@ npx @modelcontextprotocol/inspector node build/index.js
 
 ```bash
 node e2e-test.mjs       # stdio 协议：initialize → tools/list → tools/call
-node http-e2e-test.mjs  # HTTP 协议：就绪探针 + 三个工具的完整调用链
+node http-e2e-test.mjs  # 本地 HTTP 协议：就绪探针 + 三个工具的完整调用链
+
+# 远端（Apify Standby）冒烟测试，需 Apify token
+$env:APIFY_TOKEN="apify_api_xxx"; node apify-remote-smoke.mjs
 ```
 
 ### 接入本地 MCP 客户端（Claude Desktop / Cherry Studio / 5ire 等）
@@ -93,7 +96,15 @@ Standby URL 形如：
 https://<username>--mcp-stock-analyst.apify.actor/mcp
 ```
 
-> 实际地址以 Console 中该 Actor 的 **Endpoints** 标签页显示为准（部分 Actor 使用不同的主机名格式，不要凭用户名硬拼）。
+> 实际地址以 Console 中该 Actor 的 **Endpoints** 标签页显示为准（部分 Actor 使用不同的主机名格式，不要凭用户名硬拼）。也可以用 API 读取：`GET https://api.apify.com/v2/acts/<actorId>?token=<token>` 返回的 `data.standbyUrl` 字段就是准确地址。
+
+**参考：已部署实例**
+
+| 项 | 值 |
+|---|---|
+| Actor ID | `RfRL7Nj8f9uZtqmhc` |
+| Standby URL | `https://neeenja--mcp-stock-analyst.apify.actor` |
+| MCP 端点 | `https://neeenja--mcp-stock-analyst.apify.actor/mcp` |
 
 ### 5. 客户端接入
 
@@ -107,7 +118,7 @@ Standby 端点需要 Apify API token 认证，最省事的方式是通过 `mcp-r
       "args": [
         "-y",
         "mcp-remote",
-        "https://<username>--mcp-stock-analyst.apify.actor/mcp",
+        "https://neeenja--mcp-stock-analyst.apify.actor/mcp",
         "--header",
         "Authorization: Bearer ${APIFY_TOKEN}"
       ],
