@@ -153,6 +153,40 @@ token 在 Apify Console → **Settings → API & Integrations** 获取。
 
 > 事件名必须三处一致：`src/billing.ts` 的 `TOOL_EVENT_MAP` ↔ `.actor/pay_per_event.json` ↔ Apify Console 的 Monetization 设置。改价只改 Console（Console 是唯一账单来源，`pay_per_event.json` 只是参考 schema）。
 
+## 上架 Apify Store（公开可搜）
+
+上架 = 三件事：**完成收款信息 → 配置定价 → 点 Publish**。前两件是门槛，最后一件让 Actor 出现在 Store 搜索结果里。
+
+**1. 收款信息（Console → Actor → Publication → Payout billing info）**
+
+未配置收款信息时，连定价都保存不了（API 会报 `cannot-monetize-without-payout-billing-info`）。同一页里还要做 **Verify identity（KYC）**：上传身份证/驾照的清晰彩色照片（截图、纸质复印件、模糊照片都会被拒），审核约 2 个工作日。
+
+**2. 配置定价（Publication → Monetization → Set up monetization）**
+
+三步向导：**Actor pricing → Primary event → Review**。事件名、描述、单价必须与 `.actor/pay_per_event.json` 和 `src/billing.ts` 的 `TOOL_EVENT_MAP` 完全一致：
+
+| 事件名 | 标题 | 单价 | 备注 |
+|---|---|---|---|
+| `tool-call` | Market data call | $0.02 | **选为主事件** |
+| `search-call` | Symbol lookup | $0.005 | 检索事件 |
+| `apify-actor-start` | （合成事件） | 保留默认 | 每次实例启动自动计费，Apify 补贴前 5 秒算力 |
+| `apify-default-dataset-item` | （合成事件） | **删除** | 本 server 不写 dataset，留着无意义 |
+
+另建议把 **minimal max cost per run** 设为 `0.05`，防止用户把单次运行上限调得过低、连启动成本都盖不住。
+
+> 价格改动分「显著」与「非显著」两类：涨价/加事件/换模式需要 14 天公示期；**Actor 没有付费用户时立即生效**，降价、删事件、改描述也立即生效。显著改动每月只能提交一次且提交后不可撤销——定价想清楚再点。
+
+**3. 点击 Publish（Publication 页 checklist）**
+
+- **Display information**：logo（已备好：`assets/logo.png`）+ 描述
+- **Monetization**：上一步配置完成
+- **Sample output / Output schema**：按 Console 提示补齐
+- **Actor permissions**：保持 **Limited permissions**（本 server 不需要读写你的存储）
+
+发布后 Store 地址：`https://apify.com/neeenja/mcp-stock-analyst`。
+
+**一个要提前知道的限制：** Apify 的 **agentic payments**（x402 / Skyfire，让没有 Apify 账号的 AI agent 自动发现并付费）目前**不支持 Standby 模式的 Actor**——官方文档明确写着 "Not use Standby mode for now. Standby support is coming later."。所以上架初期，买家必须是 Apify 账号用户；等 Apify 支持 Standby 后会自动纳入（满足 PPE + Limited permissions 即可，无需额外操作）。
+
 ## 其他分发渠道（可选）
 
 - **Smithery**：`smithery.yaml` 已就绪（stdio 模式），执行 `npx @smithery/cli login && npx @smithery/cli deploy` 可上架。
