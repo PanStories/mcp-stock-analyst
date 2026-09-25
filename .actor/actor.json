@@ -1,0 +1,11 @@
+{
+    "actorSpecification": 1,
+    "name": "mcp-stock-analyst",
+    "title": "MCP Stock Analyst",
+    "description": "Remote MCP server for stock data: real-time quotes, fuzzy search (Chinese / pinyin / code) and historical K-lines for China A-shares, Hong Kong and US markets. Free upstream data source, no API key required.",
+    "version": "0.1",
+    "buildTag": "latest",
+    "usesStandbyMode": true,
+    "webServerMcpPath": "/mcp",
+    "dockerfile": "../Dockerfile"
+}

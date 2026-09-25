@@ -1,98 +1,14 @@
 #!/usr/bin/env node
 /**
- * MCP Stock Analyst — MCP Server
- * 提供 A股/港股/美股 实时报价、智能搜索、历史K线三类工具
- * 数据源：腾讯免费行情接口（无需 API key）
- *
- * 传输：stdio（本地/Inspector 调试）；HTTP 模式见 build/http.js（Smithery 部署用）
+ * stdio 入口 —— 本地调试 / 桌面 MCP 客户端
+ * HTTP（Apify Standby / 远程）入口见 src/http.ts
  */
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { z } from 'zod';
-import { getQuotes, getKline } from './datasources/tencent.js';
-import { searchStock } from './datasources/search.js';
+import { createServer } from './server.js';
 
-const server = new McpServer({
-  name: 'mcp-stock-analyst',
-  version: '0.1.0',
-});
-
-// ---------- 工具 1：实时报价 ----------
-server.tool(
-  'get_quote',
-  'Get real-time stock quote for A-share / HK / US stocks. Accepts codes like "600519", "sh600519", "00700" (HK), "AAPL" (US). Multiple codes separated by comma.',
-  { codes: z.string().describe('Stock code(s), comma separated, e.g. "600519,00700,AAPL"') },
-  async ({ codes }) => {
-    try {
-      const list = codes.split(/[,，\s]+/).filter(Boolean).slice(0, 10);
-      const quotes = await getQuotes(list);
-      if (!quotes.length) {
-        return { content: [{ type: 'text', text: `未找到标的：${codes}` }] };
-      }
-      const lines = quotes.map(
-        (q) =>
-          `${q.name} (${q.code})  现价 ${q.price}  ${q.change >= 0 ? '+' : ''}${q.change} (${q.changePercent}%)  ` +
-          `今开 ${q.open} / 昨收 ${q.prevClose} / 最高 ${q.high} / 最低 ${q.low}  ` +
-          `成交 ${q.volume} 手 / ${Math.round(q.turnover / 1e8 * 100) / 100} 亿`
-      );
-      return { content: [{ type: 'text', text: lines.join('\n') }] };
-    } catch (e: any) {
-      return { content: [{ type: 'text', text: `获取报价失败: ${e.message}` }] };
-    }
-  }
-);
-
-// ---------- 工具 2：智能搜索 ----------
-server.tool(
-  'search_stock',
-  'Search stock code/name. Supports Chinese name, pinyin abbreviation, or partial code. Returns matched stocks with codes.',
-  {
-    query: z.string().describe('Search keyword, e.g. "茅台", "GZMT", "600", "Tesla"'),
-    limit: z.number().optional().default(8).describe('Max results (default 8)'),
-  },
-  async ({ query, limit }) => {
-    try {
-      const hits = await searchStock(query, limit);
-      if (!hits.length) {
-        return { content: [{ type: 'text', text: `没有匹配 "${query}" 的标的` }] };
-      }
-      const text = hits.map((h) => `${h.code}  ${h.name}  (${h.matchedBy})`).join('\n');
-      return { content: [{ type: 'text', text }] };
-    } catch (e: any) {
-      return { content: [{ type: 'text', text: `搜索失败: ${e.message}` }] };
-    }
-  }
-);
-
-// ---------- 工具 3：历史K线 ----------
-server.tool(
-  'get_kline',
-  'Get historical K-line (candlestick) data for a stock. Day/week/month periods, up to 640 bars.',
-  {
-    code: z.string().describe('Stock code, e.g. "600519" or "sh600519"'),
-    days: z.number().optional().default(120).describe('Number of bars (20-640, default 120)'),
-    period: z.enum(['day', 'week', 'month']).optional().default('day').describe('K-line period'),
-  },
-  async ({ code, days, period }) => {
-    try {
-      const klines = await getKline(code, days ?? 120, period ?? 'day');
-      if (!klines.length) {
-        return { content: [{ type: 'text', text: `未获取到K线：${code}` }] };
-      }
-      const head = `K线 ${klines[0].date} ~ ${klines[klines.length - 1].date}，共 ${klines.length} 根（${period}）\n日期 开 收 高 低 量`;
-      const body = klines
-        .map((k) => `${k.date} ${k.open} ${k.close} ${k.high} ${k.low} ${k.volume}`)
-        .join('\n');
-      return { content: [{ type: 'text', text: `${head}\n${body}` }] };
-    } catch (e: any) {
-      return { content: [{ type: 'text', text: `获取K线失败: ${e.message}` }] };
-    }
-  }
-);
-
-// ---------- 启动 ----------
 async function main() {
+  const server = createServer();
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error('[mcp-stock-analyst] stdio server started');

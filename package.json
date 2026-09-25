@@ -10,6 +10,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",
+    "start:http": "node build/http.js",
     "dev": "tsc -w"
   },
   "keywords": ["mcp", "stock", "quotes", "a-share", "smithery", "mcp.so"],
