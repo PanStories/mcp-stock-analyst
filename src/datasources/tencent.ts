@@ -1,8 +1,10 @@
 /**
- * 腾讯免费行情接口封装（qt.gtimg.cn / web.ifzq.gtimg.cn）
+ * 行情数据层：腾讯免费接口（qt.gtimg.cn / web.ifzq.gtimg.cn）+ Yahoo（台湾市场）
  * 无需 API key，无配额限制
- * 支持：A股(sh/sz/bj) / 港股(hk) / 美股(us)
+ * 支持：A股(sh/sz/bj) / 港股(hk) / 美股(us) / 台湾(tw，走 Yahoo)
  */
+
+import { isTaiwanCode, getTwQuotes, getTwKline } from './yahoo.js';
 
 export interface Quote {
   code: string;          // 标准代码，如 sh600519
@@ -16,12 +18,15 @@ export interface Quote {
   low: number;
   volume: number;        // 成交量（A股:手 / 港股:股 / 美股:股）
   turnover: number;      // 成交额（元/港币/美元）
-  market: 'sh' | 'sz' | 'bj' | 'hk' | 'us';
+  market: 'sh' | 'sz' | 'bj' | 'hk' | 'us' | 'tw';
 }
 
-/** 把用户输入的代码标准化为腾讯格式 */
+/** 把用户输入的代码标准化为腾讯格式（台湾标的原样透传，由 Yahoo 层处理） */
 export function normalizeCode(input: string): string {
   const code = input.trim();
+
+  // 台湾标的：tw2330 / 2330.TW / 5483.TWO / ^TWII
+  if (isTaiwanCode(code)) return code;
 
   // 已经带前缀 sh600519 / hk00700 / usAAPL
   const m = code.match(/^(sh|sz|bj|hk|us)([\w.]+)$/i);
@@ -59,9 +64,24 @@ const MARKET_MAP: Record<string, Quote['market']> = {
 const isNum = (s: string | undefined) =>
   s !== undefined && s !== '' && !Number.isNaN(parseFloat(s));
 
-/** 实时报价：解析腾讯 v_sh600519="1~贵州茅台~600519~..." 格式 */
+/** 实时报价：台湾走 Yahoo，其余走腾讯（解析 v_sh600519="1~贵州茅台~600519~..." 格式） */
 export async function getQuotes(codes: string[]): Promise<Quote[]> {
-  const normalized = codes.map(normalizeCode);
+  const twCodes: string[] = [];
+  const cnCodes: string[] = [];
+  for (const c of codes) {
+    if (isTaiwanCode(c)) twCodes.push(c);
+    else cnCodes.push(normalizeCode(c));
+  }
+
+  const [cnQuotes, twQuotes] = await Promise.all([
+    cnCodes.length ? fetchTencentQuotes(cnCodes) : Promise.resolve([]),
+    twCodes.length ? getTwQuotes(twCodes) : Promise.resolve([]),
+  ]);
+  return [...cnQuotes, ...twQuotes];
+}
+
+/** 腾讯批量报价（A股/港股/美股） */
+async function fetchTencentQuotes(normalized: string[]): Promise<Quote[]> {
   const url = `https://qt.gtimg.cn/q=${normalized.join(',')}`;
   const res = await fetch(url, {
     headers: { 'User-Agent': 'Mozilla/5.0', Referer: 'https://gu.qq.com/' },
@@ -126,8 +146,8 @@ export interface KlineItem {
 }
 
 /**
- * K线：腾讯 web.ifzq.gtimg.cn
- * 正确参数：param=<code>,<period>,<start>,<end>,<count>,qfq
+ * K线：台湾走 Yahoo，其余走腾讯 web.ifzq.gtimg.cn
+ * 腾讯正确参数：param=<code>,<period>,<start>,<end>,<count>,qfq
  * 返回 key 为 `qfq<period>`（fqkline端点）或 `<period>`（kline端点）
  */
 export async function getKline(
@@ -135,6 +155,8 @@ export async function getKline(
   days = 120,
   period: 'day' | 'week' | 'month' = 'day'
 ): Promise<KlineItem[]> {
+  if (isTaiwanCode(code)) return getTwKline(code, days, period);
+
   const full = normalizeCode(code);
   const n = Math.min(Math.max(days, 20), 640);
   // 实测可用格式：param=sh600519,day,,,10,qfq（start/end 留空）

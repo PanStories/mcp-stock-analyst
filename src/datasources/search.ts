@@ -1,9 +1,10 @@
 /**
- * 内置 A 股常见标的速查表 + 腾讯智能搜索兜底
+ * 内置 A 股 / 台湾常见标的速查表 + 腾讯智能搜索 / Yahoo 搜索兜底
  * search_stock 工具的数据层
  */
 
 import { getQuotes } from './tencent.js';
+import { searchTwStocks } from './yahoo.js';
 
 /** 常见指数/龙头股种子表（保证搜索零依赖可用），可后续扩展 */
 const SEED: Array<{ code: string; name: string }> = [
@@ -28,6 +29,29 @@ const SEED: Array<{ code: string; name: string }> = [
   { code: 'usNVDA', name: '英伟达' },
   { code: 'usTSLA', name: '特斯拉' },
   { code: 'a2305', name: '大豆期货' },
+  // ---- 台湾市场（Yahoo 数据源，中文搜索靠种子表，Yahoo 端点不支持中文）----
+  { code: '^TWII', name: '台湾加权指数 TAIEX' },
+  { code: '2330.TW', name: '台积电 TSMC' },
+  { code: '2454.TW', name: '联发科 MediaTek' },
+  { code: '2317.TW', name: '鸿海 Hon Hai' },
+  { code: '2308.TW', name: '台达电 Delta' },
+  { code: '2303.TW', name: '联电 UMC' },
+  { code: '3711.TW', name: '日月光投控 ASE' },
+  { code: '2412.TW', name: '中华电信' },
+  { code: '1301.TW', name: '台塑' },
+  { code: '1303.TW', name: '南亚' },
+  { code: '1216.TW', name: '统一' },
+  { code: '2912.TW', name: '统一超商' },
+  { code: '2603.TW', name: '长荣' },
+  { code: '2609.TW', name: '阳明' },
+  { code: '2615.TW', name: '万海' },
+  { code: '2618.TW', name: '长荣航' },
+  { code: '2881.TW', name: '富邦金' },
+  { code: '2882.TW', name: '国泰金' },
+  { code: '2886.TW', name: '兆丰金' },
+  { code: '5880.TW', name: '合库金' },
+  { code: '0050.TW', name: '元大台湾50' },
+  { code: '0056.TW', name: '元大高股息' },
 ];
 
 export interface SearchHit {
@@ -79,6 +103,19 @@ export async function searchStock(query: string, limit = 8): Promise<SearchHit[]
     }
   } catch {
     // 网络失败时返回已有命中
+  }
+
+  // 3) Yahoo 搜索兜底（台湾市场；仅 ASCII 查询，如 "TSMC" / "2330" / "MediaTek"）
+  if (hits.length < limit) {
+    try {
+      const twHits = await searchTwStocks(query, limit - hits.length);
+      for (const h of twHits) {
+        add({ code: h.code, name: h.name, matchedBy: 'yahoo' });
+        if (hits.length >= limit) break;
+      }
+    } catch {
+      // 忽略，返回已有命中
+    }
   }
 
   return hits;

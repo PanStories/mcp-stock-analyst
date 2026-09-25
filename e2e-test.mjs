@@ -48,7 +48,7 @@ console.log('TOOLS:', tools.result.tools.map((t) => t.name).join(', '));
 // 4. 调用 get_quote
 const q = await send({
   jsonrpc: '2.0', id: 3, method: 'tools/call',
-  params: { name: 'get_quote', arguments: { codes: '600519,AAPL' } },
+  params: { name: 'get_quote', arguments: { codes: '600519,AAPL,2330.TW' } },
 });
 console.log('QUOTE RESULT:', q.result.content[0].text);
 
@@ -58,6 +58,13 @@ const s = await send({
   params: { name: 'search_stock', arguments: { query: 'GZMT' } },
 });
 console.log('SEARCH RESULT:', s.result.content[0].text);
+
+// 6. 调用 get_kline（台湾）
+const k = await send({
+  jsonrpc: '2.0', id: 5, method: 'tools/call',
+  params: { name: 'get_kline', arguments: { code: 'tw2317', days: 25, period: 'day' } },
+});
+console.log('KLINE RESULT (Taiwan tw2317):', k.result.content[0].text.split('\n').slice(0, 4).join('\n'), '...');
 
 proc.kill();
 process.exit(0);

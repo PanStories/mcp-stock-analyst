@@ -1,7 +1,7 @@
 {
   "name": "mcp-stock-analyst",
-  "version": "0.1.0",
-  "description": "MCP server providing A-share & US stock quotes, search, and K-line data. Free data sources, $0 cost.",
+  "version": "0.2.0",
+  "description": "MCP server providing A-share / HK / US / Taiwan stock quotes, search, and K-line data. Free data sources, $0 cost.",
   "type": "module",
   "main": "build/index.js",
   "bin": {
@@ -18,6 +18,8 @@
     "stock",
     "quotes",
     "a-share",
+    "taiwan",
+    "twse",
     "smithery",
     "mcp.so"
   ],

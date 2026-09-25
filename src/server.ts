@@ -13,14 +13,14 @@ import { searchStock } from './datasources/search.js';
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'mcp-stock-analyst',
-    version: '0.1.0',
+    version: '0.2.0',
   });
 
   // ---------- 工具 1：实时报价 ----------
   server.tool(
     'get_quote',
-    'Get real-time stock quote for A-share / HK / US stocks. Accepts codes like "600519", "sh600519", "00700" (HK), "AAPL" (US). Multiple codes separated by comma.',
-    { codes: z.string().describe('Stock code(s), comma separated, e.g. "600519,00700,AAPL"') },
+    'Get real-time stock quote for A-share / HK / US / Taiwan stocks. Accepts codes like "600519", "sh600519", "00700" (HK), "AAPL" (US), "2330.TW" or "tw2330" (Taiwan TWSE/TPEx). Multiple codes separated by comma.',
+    { codes: z.string().describe('Stock code(s), comma separated, e.g. "600519,00700,AAPL,2330.TW"') },
     async ({ codes }) => {
       try {
         const list = codes.split(/[,，\s]+/).filter(Boolean).slice(0, 10);
@@ -28,12 +28,15 @@ export function createServer(): McpServer {
         if (!quotes.length) {
           return { content: [{ type: 'text', text: `未找到标的：${codes}` }] };
         }
-        const lines = quotes.map(
-          (q) =>
+        const lines = quotes.map((q) => {
+          const head =
             `${q.name} (${q.code})  现价 ${q.price}  ${q.change >= 0 ? '+' : ''}${q.change} (${q.changePercent}%)  ` +
-            `今开 ${q.open} / 昨收 ${q.prevClose} / 最高 ${q.high} / 最低 ${q.low}  ` +
-            `成交 ${q.volume} 手 / ${Math.round(q.turnover / 1e8 * 100) / 100} 亿`
-        );
+            `今开 ${q.open} / 昨收 ${q.prevClose} / 最高 ${q.high} / 最低 ${q.low}`;
+          // 台湾（Yahoo）不提供成交额，只报成交量
+          return q.market === 'tw'
+            ? `${head}  成交 ${Math.round(q.volume / 1e4) / 1e2} 万股`
+            : `${head}  成交 ${q.volume} 股 / ${Math.round(q.turnover / 1e8 * 100) / 100} 亿`;
+        });
         return { content: [{ type: 'text', text: lines.join('\n') }] };
       } catch (e: any) {
         return { content: [{ type: 'text', text: `获取报价失败: ${e.message}` }] };
@@ -44,9 +47,9 @@ export function createServer(): McpServer {
   // ---------- 工具 2：智能搜索 ----------
   server.tool(
     'search_stock',
-    'Search stock code/name. Supports Chinese name, pinyin abbreviation, or partial code. Returns matched stocks with codes.',
+    'Search stock code/name across A-share / HK / US / Taiwan markets. Supports Chinese name, pinyin abbreviation, partial code, or English name. Returns matched stocks with codes.',
     {
-      query: z.string().describe('Search keyword, e.g. "茅台", "GZMT", "600", "Tesla"'),
+      query: z.string().describe('Search keyword, e.g. "茅台", "GZMT", "600", "Tesla", "台积电", "TSMC", "2330"'),
       limit: z.number().optional().default(8).describe('Max results (default 8)'),
     },
     async ({ query, limit }) => {
@@ -66,9 +69,9 @@ export function createServer(): McpServer {
   // ---------- 工具 3：历史K线 ----------
   server.tool(
     'get_kline',
-    'Get historical K-line (candlestick) data for a stock. Day/week/month periods, up to 640 bars.',
+    'Get historical K-line (candlestick) data for a stock (A-share / HK / US / Taiwan). Day/week/month periods, up to 640 bars.',
     {
-      code: z.string().describe('Stock code, e.g. "600519" or "sh600519"'),
+      code: z.string().describe('Stock code, e.g. "600519", "sh600519" or "2330.TW" (Taiwan)'),
       days: z.number().optional().default(120).describe('Number of bars (20-640, default 120)'),
       period: z.enum(['day', 'week', 'month']).optional().default('day').describe('K-line period'),
     },

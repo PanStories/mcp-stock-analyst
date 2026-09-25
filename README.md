@@ -8,9 +8,9 @@
 
 # MCP Stock Analyst (English)
 
-A Model Context Protocol (**MCP**) server delivering stock market data for **China A-shares, Hong Kong and US markets** — live quotes, smart symbol search and historical K-lines.
+A Model Context Protocol (**MCP**) server delivering stock market data for **China A-shares, Hong Kong, US and Taiwan markets** — live quotes, smart symbol search and historical K-lines.
 
-- **Zero-cost data**: powered by free public market-data APIs (Tencent), no API key, no quota
+- **Zero-cost data**: powered by free public market-data APIs (Tencent for A-share/HK/US, Yahoo Finance for Taiwan), no API key, no quota
 - **3 practical tools**: real-time quotes (batch up to 10), fuzzy search (Chinese name / pinyin / ticker code), historical candlesticks
 - **Dual transport**: `stdio` (local desktop clients) + `Streamable HTTP` (remote hosting on Apify Standby)
 - **Live on Apify Store**: https://apify.com/neeenja/mcp-stock-analyst — pay-per-call, no subscription
@@ -19,9 +19,18 @@ A Model Context Protocol (**MCP**) server delivering stock market data for **Chi
 
 | Tool | What it does | Example input |
 |---|---|---|
-| `get_quote` | Real-time quote (A-share / HK / US, up to 10 symbols per call) | `600519,00700,AAPL` |
-| `search_stock` | Fuzzy search by name, pinyin or partial code | `茅台` / `GZMT` / `NVIDIA` |
-| `get_kline` | Historical candlesticks (day/week/month, 20–640 bars) | `600519`, period=`day` |
+| `get_quote` | Real-time quote (A-share / HK / US / Taiwan, up to 10 symbols per call) | `600519,00700,AAPL,2330.TW` |
+| `search_stock` | Fuzzy search by name, pinyin or partial code | `茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC` |
+| `get_kline` | Historical candlesticks (day/week/month, 20–640 bars) | `600519` or `2330.TW`, period=`day` |
+
+### Taiwan stock codes
+
+Taiwan (TWSE listed / TPEx OTC) stocks are served via Yahoo Finance. Accepted formats:
+
+- `2330.TW` — TWSE listed (explicit)
+- `5483.TWO` — TPEx OTC (explicit)
+- `tw2330` — shorthand; the server auto-detects the exchange (tries `.TW` first, then `.TWO`)
+- `^TWII` — Taiwan Capitalization Weighted Index (TAIEX)
 
 ## Connect (recommended: hosted endpoint)
 
@@ -107,12 +116,13 @@ The Actor definition (`.actor/actor.json`) already enables **Standby mode** with
 ## Tech stack
 
 - Node.js ≥ 18, TypeScript, official `@modelcontextprotocol/sdk`
-- Data source: Tencent public market APIs (free, no key)
+- Data source: Tencent public market APIs (A-share/HK/US, free, no key) + Yahoo Finance chart API (Taiwan, free, no key)
 - Multi-stage Docker build (`node:20-alpine`)
 
 ## Roadmap
 
 - [x] Pay-per-event billing
+- [x] Taiwan market support (TWSE / TPEx / TAIEX via Yahoo Finance)
 - [ ] Money flow / dragon-tiger list data
 - [ ] Financial report summaries
 - [ ] API-key auth layer (self-hosting)
@@ -127,9 +137,9 @@ MIT
 
 # MCP Stock Analyst（简体中文）
 
-一个提供 **A股 / 港股 / 美股** 行情数据的 MCP (Model Context Protocol) 服务器——实时报价、智能搜索、历史K线。
+一个提供 **A股 / 港股 / 美股 / 台湾股** 行情数据的 MCP (Model Context Protocol) 服务器——实时报价、智能搜索、历史K线。
 
-- **零成本数据源**：基于腾讯免费公开行情接口，无需 API key，无配额限制
+- **零成本数据源**：A股/港股/美股用腾讯免费公开行情接口，台湾股用 Yahoo Finance，均无需 API key，无配额限制
 - **三个实用工具**：实时报价（单次最多 10 个标的）、智能搜索（中文名/拼音/代码）、历史K线
 - **双传输模式**：`stdio`（本地桌面客户端）+ `Streamable HTTP`（Apify Standby 远程托管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次付费，无订阅
@@ -138,9 +148,18 @@ MIT
 
 | 工具 | 功能 | 示例输入 |
 |---|---|---|
-| `get_quote` | 实时报价（A股/港股/美股，单次最多10个） | `600519,00700,AAPL` |
-| `search_stock` | 智能搜索代码/名称/拼音 | `茅台` / `GZMT` / `NVIDIA` |
-| `get_kline` | 历史K线（日/周/月，20–640 根） | `600519`，period=`day` |
+| `get_quote` | 实时报价（A股/港股/美股/台湾股，单次最多10个） | `600519,00700,AAPL,2330.TW` |
+| `search_stock` | 智能搜索代码/名称/拼音 | `茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC` |
+| `get_kline` | 历史K线（日/周/月，20–640 根） | `600519` 或 `2330.TW`，period=`day` |
+
+### 台湾股票代码格式
+
+台湾股（TWSE 上市 / TPEx 上柜）走 Yahoo Finance 数据源，支持以下输入格式：
+
+- `2330.TW` —— 上市股票（显式指定）
+- `5483.TWO` —— 上柜股票（显式指定）
+- `tw2330` —— 简写；服务端自动探测交易所（先试 `.TW`，再试 `.TWO`）
+- `^TWII` —— 台湾加权指数（TAIEX）
 
 ## 接入方式（推荐：云端端点）
 
@@ -226,12 +245,13 @@ Actor 定义（`.actor/actor.json`）已启用 **Standby 模式**，MCP 路径 `
 ## 技术栈
 
 - Node.js ≥ 18、TypeScript、官方 `@modelcontextprotocol/sdk`
-- 数据源：腾讯公开行情接口（免费无 key）
+- 数据源：腾讯公开行情接口（A股/港股/美股，免费无 key）+ Yahoo Finance chart 接口（台湾，免费无 key）
 - 多阶段 Docker 构建（`node:20-alpine`）
 
 ## 路线图
 
 - [x] 按事件计费
+- [x] 台湾市场支持（TWSE / TPEx / 加权指数，Yahoo Finance 数据源）
 - [ ] 资金流向 / 龙虎榜
 - [ ] 财报摘要
 - [ ] 自定义 API key 鉴权层（自托管时用）
