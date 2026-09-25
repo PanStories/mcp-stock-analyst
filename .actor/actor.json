@@ -7,6 +7,7 @@
     "buildTag": "latest",
     "usesStandbyMode": true,
     "webServerMcpPath": "/mcp",
+    "output": "./output_schema.json",
     "inputSchema": {
         "title": "MCP Stock Analyst",
         "description": "This Actor is a remote MCP server and does not take a manual input. Connect your MCP client to the Actor's standby endpoint (see README) and call the tools from there.",

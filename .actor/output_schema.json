@@ -1,0 +1,13 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "MCP Stock Analyst output",
+  "description": "This Actor is a remote MCP server: it does not write results to the default dataset. All output is delivered synchronously to MCP clients over the Streamable HTTP endpoint listed below. See .actor/OUTPUT.md for the format returned by each tool (get_quote, search_stock, get_kline).",
+  "properties": {
+    "mcpEndpoint": {
+      "type": "string",
+      "title": "MCP endpoint",
+      "description": "Streamable HTTP MCP endpoint of this Actor run. Connect an MCP client here (Authorization: Bearer <APIFY_TOKEN>). POST JSON-RPC messages: initialize, tools/list, tools/call.",
+      "template": "{{run.containerUrl}}/mcp"
+    }
+  }
+}
