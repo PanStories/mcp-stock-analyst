@@ -1,0 +1,16 @@
+# Smithery manifest — https://smithery.ai/docs
+# Deployment: npx @smithery/cli build && npx @smithery/cli deploy
+
+startCommand:
+  type: stdio
+  configSchema:
+    # 本 server 无需用户配置（免费数据源，无需 API key）
+    type: object
+    properties: {}
+  commandFunction:
+    type: code
+    source: |
+      () => ({
+        command: 'node',
+        args: ['build/index.js'],
+      })
