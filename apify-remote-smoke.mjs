@@ -69,6 +69,13 @@ const quote = await mcp({
 });
 console.log('4) get_quote:', quote.payload?.result?.content?.[0]?.text?.split('\n').join('\n   '));
 
+// 4b) 真实数据：get_quote（台湾）
+const quoteTw = await mcp({
+  jsonrpc: '2.0', id: 6, method: 'tools/call',
+  params: { name: 'get_quote', arguments: { codes: '2330.TW,tw2454,^TWII' } },
+});
+console.log('4b) get_quote (Taiwan):', quoteTw.payload?.result?.content?.[0]?.text?.split('\n').join('\n   '));
+
 // 5) 真实数据：search_stock + get_kline
 const search = await mcp({
   jsonrpc: '2.0', id: 4, method: 'tools/call',
@@ -76,10 +83,22 @@ const search = await mcp({
 });
 console.log('5) search_stock:', search.payload?.result?.content?.[0]?.text);
 
+const searchTw = await mcp({
+  jsonrpc: '2.0', id: 7, method: 'tools/call',
+  params: { name: 'search_stock', arguments: { query: '台积电' } },
+});
+console.log('5b) search_stock (Taiwan):', searchTw.payload?.result?.content?.[0]?.text);
+
 const kline = await mcp({
   jsonrpc: '2.0', id: 5, method: 'tools/call',
   params: { name: 'get_kline', arguments: { code: '600519', days: 30, period: 'day' } },
 });
 console.log('6) get_kline:', kline.payload?.result?.content?.[0]?.text?.split('\n').slice(0, 2).join(' | '));
+
+const klineTw = await mcp({
+  jsonrpc: '2.0', id: 8, method: 'tools/call',
+  params: { name: 'get_kline', arguments: { code: 'tw2317', days: 30, period: 'day' } },
+});
+console.log('6b) get_kline (Taiwan tw2317):', klineTw.payload?.result?.content?.[0]?.text?.split('\n').slice(0, 2).join(' | '));
 
 console.log(`\n✅ 远端 MCP 服务可用，总耗时 ${((Date.now() - started) / 1000).toFixed(1)}s`);
