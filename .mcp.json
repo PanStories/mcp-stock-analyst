@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "stock-analyst": {
+      "type": "http",
+      "url": "https://neeenja--mcp-stock-analyst.apify.actor/mcp",
+      "headers": {
+        "Authorization": "Bearer ${APIFY_TOKEN}"
+      }
+    }
+  }
+}

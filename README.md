@@ -17,11 +17,11 @@ A Model Context Protocol (**MCP**) server delivering stock market data for **Chi
 
 ## Tools
 
-| Tool | What it does | Example input |
-|---|---|---|
-| `get_quote` | Real-time quote (A-share / HK / US / Taiwan, up to 10 symbols per call) | `600519,00700,AAPL,2330.TW` |
-| `search_stock` | Fuzzy search by name, pinyin or partial code | `茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC` |
-| `get_kline` | Historical candlesticks (day/week/month, 20–640 bars) | `600519` or `2330.TW`, period=`day` |
+- **`get_quote`** — Real-time quote for one or many symbols (A-share / HK / US / Taiwan, up to 10 per call). Example: `600519,00700,AAPL,2330.TW`
+- **`search_stock`** — Fuzzy lookup by Chinese name, pinyin initials, partial code or English name. Example: `茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC`
+- **`get_kline`** — Historical candlesticks (day / week / month, 20–640 bars). Example: `600519` or `2330.TW`, period=`day`
+
+All three tools work across all four markets — no separate tool per exchange.
 
 ### Taiwan stock codes
 
@@ -146,11 +146,11 @@ MIT
 
 ## 工具列表
 
-| 工具 | 功能 | 示例输入 |
-|---|---|---|
-| `get_quote` | 实时报价（A股/港股/美股/台湾股，单次最多10个） | `600519,00700,AAPL,2330.TW` |
-| `search_stock` | 智能搜索代码/名称/拼音 | `茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC` |
-| `get_kline` | 历史K线（日/周/月，20–640 根） | `600519` 或 `2330.TW`，period=`day` |
+- **`get_quote`** —— 实时报价，支持批量（A股/港股/美股/台湾股，单次最多 10 个）。示例：`600519,00700,AAPL,2330.TW`
+- **`search_stock`** —— 智能搜索：中文名/拼音首字母/部分代码/英文名。示例：`茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC`
+- **`get_kline`** —— 历史K线（日/周/月，20–640 根）。示例：`600519` 或 `2330.TW`，period=`day`
+
+三个工具在四个市场通用，不需要按交易所分别调用。
 
 ### 台湾股票代码格式
 
@@ -275,11 +275,11 @@ MIT
 
 ## 工具列表
 
-| 工具 | 功能 | 範例輸入 |
-|---|---|---|
-| `get_quote` | 即時報價（A股/港股/美股/台股，單次最多10個） | `600519,00700,AAPL,2330.TW` |
-| `search_stock` | 智慧搜尋代碼/名稱/拼音 | `茅台` / `GZMT` / `NVIDIA` / `台積電` / `TSMC` |
-| `get_kline` | 歷史K線（日/週/月，20–640 根） | `600519` 或 `2330.TW`，period=`day` |
+- **`get_quote`** —— 即時報價，支援批量（A股/港股/美股/台股，單次最多 10 個）。範例：`600519,00700,AAPL,2330.TW`
+- **`search_stock`** —— 智慧搜尋：中文名稱/拼音首字母/部分代碼/英文名稱。範例：`茅台` / `GZMT` / `NVIDIA` / `台積電` / `TSMC`
+- **`get_kline`** —— 歷史K線（日/週/月，20–640 根）。範例：`600519` 或 `2330.TW`，period=`day`
+
+三個工具在四個市場通用，不需要按交易所分別呼叫。
 
 ### 台灣股票代碼格式
 
