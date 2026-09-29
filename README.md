@@ -15,6 +15,7 @@ A Model Context Protocol (**MCP**) server delivering stock market data for **Chi
 - **Dual transport**: `stdio` (local desktop clients) + `Streamable HTTP` (remote hosting on Apify Standby)
 - **Live on Apify Store**: https://apify.com/neeenja/mcp-stock-analyst — pay-per-call, no subscription
 - **Project page**: https://panstories.github.io/mcp-stock-analyst — hosted GitHub Pages overview
+- [Sartbot Featured](https://sartbot.com) — listed in the Sartbot MCP directory
 
 ## Tools
 
@@ -145,6 +146,7 @@ MIT
 - **双传输模式**：`stdio`（本地桌面客户端）+ `Streamable HTTP`（Apify Standby 远程托管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次付费，无订阅
 - **项目主页**：https://panstories.github.io/mcp-stock-analyst —— GitHub Pages 概览页
+- [Sartbot 精选](https://sartbot.com) —— 收录于 Sartbot MCP 目录
 
 ## 工具列表
 
@@ -275,6 +277,7 @@ MIT
 - **雙傳輸模式**：`stdio`（本機桌面用戶端）+ `Streamable HTTP`（Apify Standby 遠端託管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次計費，無訂閱
 - **專案首頁**：https://panstories.github.io/mcp-stock-analyst —— GitHub Pages 概覽頁
+- [Sartbot 精選](https://sartbot.com) —— 收錄於 Sartbot MCP 目錄
 
 ## 工具列表
 
