@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCP Stock Analyst — A-share / HK / US / Taiwan market data over MCP</title>
+<meta name="description" content="A Model Context Protocol server delivering real-time quotes, smart symbol search and historical K-lines for China A-shares, Hong Kong, US and Taiwan markets. Zero-cost data, pay-per-call." />
+<style>
+  :root{
+    --navy:#0f2a4a; --navy2:#163a63; --blue:#2563eb; --blue-d:#1d4ed8;
+    --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#5b6b7e;
+    --line:#e3e8ef; --green:#16a34a; --green-bg:#e8f6ee; --amber:#b45309;
+    --shadow:0 1px 3px rgba(15,42,74,.08),0 8px 24px rgba(15,42,74,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  /* Header */
+  header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20;
+    box-shadow:0 1px 0 rgba(255,255,255,.06)}
+  .top .wrap{display:flex;align-items:center;gap:16px;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:#fff}
+  .brand svg{width:26px;height:26px;flex:none}
+  nav.main{margin-left:auto;display:flex;gap:22px;align-items:center}
+  nav.main a{color:#cdd9e8;font-size:14px}
+  nav.main a:hover{color:#fff;text-decoration:none}
+  .lang{display:inline-flex;border:1px solid rgba(255,255,255,.25);border-radius:8px;overflow:hidden}
+  .lang button{background:transparent;color:#cdd9e8;border:0;padding:6px 12px;font-size:13px;cursor:pointer}
+  .lang button.active{background:#fff;color:var(--navy);font-weight:600}
+  /* Hero */
+  .hero{background:linear-gradient(160deg,var(--navy2),var(--navy));color:#fff;padding:54px 0 46px}
+  .hero h1{font-size:34px;margin:0 0 10px;line-height:1.2}
+  .hero p.lead{font-size:17px;color:#cfe0f3;max-width:680px;margin:0 0 22px}
+  .badges{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 13px;font-size:13px;color:#eaf2fb}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.25)}
+  .cta{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid transparent}
+  .btn.primary{background:var(--blue);color:#fff}
+  .btn.primary:hover{background:var(--blue-d);text-decoration:none}
+  .btn.ghost{border-color:rgba(255,255,255,.35);color:#fff;background:transparent}
+  .btn.ghost:hover{background:rgba(255,255,255,.12);text-decoration:none}
+  /* Sections */
+  section{padding:46px 0}
+  section h2{font-size:24px;margin:0 0 6px;color:var(--navy)}
+  section .sub{color:var(--muted);margin:0 0 26px;font-size:15px}
+  .grid{display:grid;gap:18px}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:860px){.grid.cols-4,.grid.cols-3{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid.cols-4,.grid.cols-3{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+  .card .ic{width:34px;height:34px;border-radius:9px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .card .ic svg{width:19px;height:19px}
+  .card h3{margin:0 0 6px;font-size:16px;color:var(--navy)}
+  .card p{margin:0;font-size:14px;color:var(--muted)}
+  .card code{background:#eef2f7;border-radius:6px;padding:1px 6px;font-size:13px;color:var(--navy2)}
+  /* Pricing */
+  .price-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+  .price-table th,.price-table td{padding:14px 16px;text-align:left;font-size:14px;border-bottom:1px solid var(--line)}
+  .price-table th{background:#f0f4f9;color:var(--navy);font-weight:600}
+  .price-table tr:last-child td{border-bottom:0}
+  .pill{display:inline-block;background:var(--green-bg);color:var(--green);border-radius:6px;padding:2px 9px;font-weight:600;font-size:13px}
+  .pill.free{background:#eef2f7;color:var(--muted)}
+  .note{background:#fff8ec;border:1px solid #f3e0bd;border-radius:12px;padding:14px 16px;font-size:14px;color:#7a5a12;margin-top:16px}
+  /* Connect */
+  .code{position:relative;background:#0f1b2d;color:#d6e2f1;border-radius:12px;padding:18px 18px;overflow:auto;font-size:13px;line-height:1.5}
+  .code pre{margin:0;font-family:"SF Mono",Menlo,Consolas,monospace;white-space:pre}
+  .tabs{display:flex;gap:8px;margin-bottom:-1px}
+  .tab{background:#eef2f7;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;padding:8px 14px;font-size:13px;cursor:pointer;color:var(--muted)}
+  .tab.active{background:var(--card);color:var(--navy);font-weight:600;border-color:var(--line)}
+  .panel{display:none}
+  .panel.active{display:block}
+  .copy{position:absolute;top:10px;right:10px;background:#1d3a5f;color:#cfe0f3;border:1px solid #2c507f;border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer}
+  .copy:hover{background:#244a78}
+  /* Footer */
+  footer{background:var(--navy);color:#aebfd2;padding:30px 0;font-size:13px}
+  footer a{color:#cfe0f3}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+  footer .fcols{display:flex;gap:26px;flex-wrap:wrap}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#7fd1a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 4-7"/>
+      </svg>
+      MCP Stock Analyst
+    </div>
+    <nav class="main">
+      <a href="#tools">Tools</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#connect">Connect</a>
+      <a href="https://github.com/PanStories/mcp-stock-analyst" target="_blank" rel="noopener">Source</a>
+      <span class="lang">
+        <button id="enBtn" class="active" onclick="setLang('en')">EN</button>
+        <button id="zhBtn" onclick="setLang('zh')">中文</button>
+      </span>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1 class="lang-en">Stock market data for A-shares, Hong Kong, US &amp; Taiwan — over MCP</h1>
+    <h1 class="lang-zh hidden">A股 / 港股 / 美股 / 台股行情数据 —— 通过 MCP 协议提供</h1>
+    <p class="lead lang-en">A Model Context Protocol server delivering real-time quotes, smart symbol search and historical K-lines. Zero-cost data sources, pay-per-call, no subscription.</p>
+    <p class="lead lang-zh hidden">一个提供实时报价、智能搜索与历史 K 线的 MCP 服务器。零成本数据源，按次付费，无订阅。</p>
+    <div class="badges">
+      <span class="badge"><span class="dot"></span> <span class="lang-en">Live on Apify Store</span><span class="lang-zh hidden">已上架 Apify Store</span></span>
+      <span class="badge">MIT</span>
+      <span class="badge">v0.2.0</span>
+      <span class="badge"><span class="lang-en">4 markets</span><span class="lang-zh hidden">覆盖 4 个市场</span></span>
+      <span class="badge"><span class="lang-en">$0 data cost</span><span class="lang-zh hidden">数据零成本</span></span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="https://apify.com/neeenja/mcp-stock-analyst" target="_blank" rel="noopener">Apify Store ↗</a>
+      <a class="btn ghost" href="https://github.com/PanStories/mcp-stock-analyst" target="_blank" rel="noopener">View Source ↗</a>
+      <a class="btn ghost" href="#connect"><span class="lang-en">Connect</span><span class="lang-zh hidden">接入方式</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- MARKETS -->
+<section>
+  <div class="wrap">
+    <h2 class="lang-en">Four markets, one server</h2>
+    <h2 class="lang-zh hidden">四个市场，一套服务</h2>
+    <p class="sub lang-en">All three tools work across every market — no separate tool per exchange.</p>
+    <p class="sub lang-zh hidden">三个工具在四个市场通用，无需按交易所分别调用。</p>
+    <div class="grid cols-4">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M3 17l5-5 4 4 8-9"/></svg></div>
+        <h3 class="lang-en">China A-shares</h3><h3 class="lang-zh hidden">A 股</h3>
+        <p class="lang-en">Shanghai &amp; Shenzhen, e.g. <code>600519</code></p>
+        <p class="lang-zh hidden">沪深市场，如 <code>600519</code></p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M3 17l5-5 4 4 8-9"/></svg></div>
+        <h3 class="lang-en">Hong Kong</h3><h3 class="lang-zh hidden">港股</h3>
+        <p class="lang-en">HKEX listings, e.g. <code>00700</code></p>
+        <p class="lang-zh hidden">港交所，如 <code>00700</code></p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M3 17l5-5 4 4 8-9"/></svg></div>
+        <h3 class="lang-en">United States</h3><h3 class="lang-zh hidden">美股</h3>
+        <p class="lang-en">NYSE / NASDAQ, e.g. <code>AAPL</code></p>
+        <p class="lang-zh hidden">纽交所 / 纳斯达克，如 <code>AAPL</code></p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M3 17l5-5 4 4 8-9"/></svg></div>
+        <h3 class="lang-en">Taiwan</h3><h3 class="lang-zh hidden">台股</h3>
+        <p class="lang-en">TWSE / TPEx, e.g. <code>2330.TW</code></p>
+        <p class="lang-zh hidden">TWSE / 上柜，如 <code>2330.TW</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools" style="background:#eef2f7">
+  <div class="wrap">
+    <h2 class="lang-en">Three practical tools</h2>
+    <h2 class="lang-zh hidden">三个实用工具</h2>
+    <p class="sub lang-en">Expose market data directly to any MCP client (Claude, Cursor, custom agents).</p>
+    <p class="sub lang-zh hidden">直接向任意 MCP 客户端（Claude、Cursor、自定义 Agent）暴露行情数据。</p>
+    <div class="grid cols-3">
+      <div class="card">
+        <h3><code>get_quote</code></h3>
+        <p class="lang-en">Real-time quote for one or many symbols (up to 10 per call). Batch A-share / HK / US / Taiwan in one request.</p>
+        <p class="lang-zh hidden">实时报价，支持批量（单次最多 10 个）。一次请求覆盖 A 股 / 港股 / 美股 / 台股。</p>
+      </div>
+      <div class="card">
+        <h3><code>search_stock</code></h3>
+        <p class="lang-en">Fuzzy lookup by Chinese name, pinyin initials, partial code or English name. e.g. <code>茅台</code> / <code>TSMC</code>.</p>
+        <p class="lang-zh hidden">智能搜索：中文名 / 拼音首字母 / 部分代码 / 英文名。如 <code>茅台</code> / <code>TSMC</code>。</p>
+      </div>
+      <div class="card">
+        <h3><code>get_kline</code></h3>
+        <p class="lang-en">Historical candlesticks (day / week / month, 20–640 bars). e.g. <code>600519</code> or <code>2330.TW</code>.</p>
+        <p class="lang-zh hidden">历史 K 线（日 / 周 / 月，20–640 根）。如 <code>600519</code> 或 <code>2330.TW</code>。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <h2 class="lang-en">Pricing — pay per event</h2>
+    <h2 class="lang-zh hidden">计费 —— 按事件付费</h2>
+    <p class="sub lang-en">No subscription, no monthly fee. You pay only when data is returned.</p>
+    <p class="sub lang-zh hidden">无订阅、无月费。仅在返回数据时计费。</p>
+    <table class="price-table">
+      <thead>
+        <tr><th class="lang-en">Event</th><th class="lang-zh hidden">事件</th>
+            <th class="lang-en">Charged when</th><th class="lang-zh hidden">触发时机</th>
+            <th class="lang-en">Price</th><th class="lang-zh hidden">单价</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>tool-call</code> <span class="pill lang-en">primary</span><span class="pill lang-zh hidden">主事件</span></td>
+          <td class="lang-en">each <code>get_quote</code> / <code>get_kline</code> call</td>
+          <td class="lang-zh hidden">每次 <code>get_quote</code> / <code>get_kline</code> 调用</td>
+          <td><b>$0.02</b></td>
+        </tr>
+        <tr>
+          <td><code>search-call</code></td>
+          <td class="lang-en">each <code>search_stock</code> call</td>
+          <td class="lang-zh hidden">每次 <code>search_stock</code> 调用</td>
+          <td><b>$0.005</b></td>
+        </tr>
+        <tr>
+          <td><span class="pill free lang-en">free</span><span class="pill free lang-zh hidden">免费</span></td>
+          <td class="lang-en">MCP handshake (<code>initialize</code>) &amp; <code>tools/list</code></td>
+          <td class="lang-zh hidden">MCP 握手（<code>initialize</code>）与 <code>tools/list</code></td>
+          <td><b>$0.00</b></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note lang-en">
+      <b>Free tier:</b> every Apify account includes <b>$5 of free platform credit monthly</b> (~250 quote calls), so light users effectively pay nothing.
+    </div>
+    <div class="note lang-zh hidden">
+      <b>免费额度：</b>每个 Apify 账号每月自带 <b>$5 平台免费额度</b>（按 $0.02/次约 250 次报价调用），轻度用户实际等于免费用。
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT -->
+<section id="connect" style="background:#eef2f7">
+  <div class="wrap">
+    <h2 class="lang-en">Connect</h2>
+    <h2 class="lang-zh hidden">接入方式</h2>
+    <p class="sub lang-en">Use the hosted endpoint (recommended) or run it locally.</p>
+    <p class="sub lang-zh hidden">推荐使用云端端点，或本地自行运行。</p>
+
+    <div class="tabs">
+      <div class="tab active" id="tab-hosted" onclick="setTab('hosted')"><span class="lang-en">Hosted endpoint</span><span class="lang-zh hidden">云端端点</span></div>
+      <div class="tab" id="tab-stdio" onclick="setTab('stdio')"><span class="lang-en">Local (stdio)</span><span class="lang-zh hidden">本地（stdio）</span></div>
+    </div>
+
+    <div class="panel active" id="panel-hosted">
+      <div class="code">
+        <button class="copy" onclick="copyCode(this)">Copy</button>
+<pre>{
+  "mcpServers": {
+    "stock-analyst": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote",
+        "https://neeenja--mcp-stock-analyst.apify.actor/mcp",
+        "--header", "Authorization: Bearer ${APIFY_TOKEN}"
+      ],
+      "env": { "APIFY_TOKEN": "<your-apify-api-token>" }
+    }
+  }
+}</pre>
+      </div>
+      <p class="lang-en" style="font-size:14px;color:var(--muted);margin-top:12px">Get your token from Apify Console → <b>Settings → API &amp; Integrations</b>.</p>
+      <p class="lang-zh hidden" style="font-size:14px;color:var(--muted);margin-top:12px">token 在 Apify Console → <b>Settings → API &amp; Integrations</b> 获取。</p>
+    </div>
+
+    <div class="panel" id="panel-stdio">
+      <div class="code">
+        <button class="copy" onclick="copyCode(this)">Copy</button>
+<pre>git clone https://github.com/PanStories/mcp-stock-analyst
+cd mcp-stock-analyst
+npm install && npm run build
+
+# then in your MCP client config:
+{
+  "mcpServers": {
+    "stock-analyst": {
+      "command": "node",
+      "args": ["/path/to/mcp-stock-analyst/build/index.js"]
+    }
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a href="https://apify.com/neeenja/mcp-stock-analyst" target="_blank" rel="noopener">Apify Store</a></div>
+      <div><a href="https://github.com/PanStories/mcp-stock-analyst" target="_blank" rel="noopener">GitHub</a></div>
+      <div><a href="https://neeenja--mcp-stock-analyst.apify.actor/mcp" target="_blank" rel="noopener">MCP Endpoint</a></div>
+      <div>License: MIT</div>
+    </div>
+    <div>© PanStories · MCP Stock Analyst</div>
+  </div>
+</footer>
+
+<script>
+  function setLang(l){
+    var en=document.querySelectorAll('.lang-en'), zh=document.querySelectorAll('.lang-zh');
+    var isEn = l==='en';
+    en.forEach(function(e){e.classList.toggle('hidden',!isEn)});
+    zh.forEach(function(e){e.classList.toggle('hidden',isEn)});
+    document.getElementById('enBtn').classList.toggle('active',isEn);
+    document.getElementById('zhBtn').classList.toggle('active',!isEn);
+    try{localStorage.setItem('msa-lang',l)}catch(e){}
+  }
+  function setTab(t){
+    document.getElementById('panel-hosted').classList.toggle('active',t==='hosted');
+    document.getElementById('panel-stdio').classList.toggle('active',t==='stdio');
+    document.getElementById('tab-hosted').classList.toggle('active',t==='hosted');
+    document.getElementById('tab-stdio').classList.toggle('active',t==='stdio');
+  }
+  function copyCode(btn){
+    var pre=btn.parentElement.querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(function(){
+      var o=btn.textContent;btn.textContent='Copied';setTimeout(function(){btn.textContent=o},1200);
+    });
+  }
+  try{var s=localStorage.getItem('msa-lang');if(s&&s==='zh')setLang('zh')}catch(e){}
+</script>
+</body>
+</html>
