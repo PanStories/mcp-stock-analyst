@@ -14,6 +14,7 @@ A Model Context Protocol (**MCP**) server delivering stock market data for **Chi
 - **3 practical tools**: real-time quotes (batch up to 10), fuzzy search (Chinese name / pinyin / ticker code), historical candlesticks
 - **Dual transport**: `stdio` (local desktop clients) + `Streamable HTTP` (remote hosting on Apify Standby)
 - **Live on Apify Store**: https://apify.com/neeenja/mcp-stock-analyst — pay-per-call, no subscription
+- **Project page**: https://panstories.github.io/mcp-stock-analyst — hosted GitHub Pages overview
 
 ## Tools
 
@@ -143,6 +144,7 @@ MIT
 - **三个实用工具**：实时报价（单次最多 10 个标的）、智能搜索（中文名/拼音/代码）、历史K线
 - **双传输模式**：`stdio`（本地桌面客户端）+ `Streamable HTTP`（Apify Standby 远程托管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次付费，无订阅
+- **项目主页**：https://panstories.github.io/mcp-stock-analyst —— GitHub Pages 概览页
 
 ## 工具列表
 
@@ -272,6 +274,7 @@ MIT
 - **三個實用工具**：即時報價（單次最多 10 個標的）、智慧搜尋（中文名稱/拼音/代碼）、歷史K線
 - **雙傳輸模式**：`stdio`（本機桌面用戶端）+ `Streamable HTTP`（Apify Standby 遠端託管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次計費，無訂閱
+- **專案首頁**：https://panstories.github.io/mcp-stock-analyst —— GitHub Pages 概覽頁
 
 ## 工具列表
 
