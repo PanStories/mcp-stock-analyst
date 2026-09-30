@@ -404,11 +404,11 @@ ads. If it powers your research or agents, please support it:
 - ☕ Ko-fi (the **Sponsor** ❤️ button on this repo routes here): https://ko-fi.com/panstories
 
 **简体中文** — **MCP Stock Analyst** 开源（MIT）、无广告，提供 A股/港股/美股/台湾股零 API key 行情，
-由社区资助而非广告。若它支撑了你的研究或智能体，欢迎赞助：GitHub Sponsors 点本仓库的
+由社区资助而非广告。若它支撑了你的研究或智能体，欢迎赞助：点本仓库的
 **Sponsor** 按钮，或前往 Ko-fi: https://ko-fi.com/panstories
 
 **繁體中文** — **MCP Stock Analyst** 開源（MIT）、無廣告，提供 A股/港股/美股/台股零 API key 行情，
-由社群資助而非廣告。若它支撐了你的研究或智能體，歡迎贊助：GitHub Sponsors 點本倉庫的
+由社群資助而非廣告。若它支撐了你的研究或智能體，歡迎贊助：點本倉庫的
 **Sponsor** 按鈕，或前往 Ko-fi: https://ko-fi.com/panstories
 
 Thank you! · 谢谢 · 謝謝 💙
