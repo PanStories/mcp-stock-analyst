@@ -394,3 +394,22 @@ Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `
 ## 授權條款
 
 MIT
+---
+
+## Support · 赞助 · 贊助
+
+**EN** — **MCP Stock Analyst** is open source (MIT), ad-free, and delivers zero-API-key
+quotes across A-shares / Hong Kong / US / Taiwan. It is funded by the community, not by
+ads. If it powers your research or agents, please support it:
+- ❤️ GitHub Sponsors: click **Sponsor** on this repo (routes to PanStories / MistifyTea)
+- ☕ Ko-fi: https://ko-fi.com/panstories
+
+**简体中文** — **MCP Stock Analyst** 开源（MIT）、无广告，提供 A股/港股/美股/台湾股零 API key 行情，
+由社区资助而非广告。若它支撑了你的研究或智能体，欢迎赞助：GitHub Sponsors 点本仓库的
+**Sponsor** 按钮，或前往 Ko-fi: https://ko-fi.com/panstories
+
+**繁體中文** — **MCP Stock Analyst** 開源（MIT）、無廣告，提供 A股/港股/美股/台股零 API key 行情，
+由社群資助而非廣告。若它支撐了你的研究或智能體，歡迎贊助：GitHub Sponsors 點本倉庫的
+**Sponsor** 按鈕，或前往 Ko-fi: https://ko-fi.com/panstories
+
+Thank you! · 谢谢 · 謝謝 💙
