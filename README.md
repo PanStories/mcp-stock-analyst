@@ -401,8 +401,7 @@ MIT
 **EN** — **MCP Stock Analyst** is open source (MIT), ad-free, and delivers zero-API-key
 quotes across A-shares / Hong Kong / US / Taiwan. It is funded by the community, not by
 ads. If it powers your research or agents, please support it:
-- ❤️ GitHub Sponsors: click **Sponsor** on this repo (routes to PanStories / MistifyTea)
-- ☕ Ko-fi: https://ko-fi.com/panstories
+- ☕ Ko-fi (the **Sponsor** ❤️ button on this repo routes here): https://ko-fi.com/panstories
 
 **简体中文** — **MCP Stock Analyst** 开源（MIT）、无广告，提供 A股/港股/美股/台湾股零 API key 行情，
 由社区资助而非广告。若它支撑了你的研究或智能体，欢迎赞助：GitHub Sponsors 点本仓库的

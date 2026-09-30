@@ -1,7 +1,13 @@
 # Funding config for PanStories open-source MCP servers
-# Enables the "Sponsor" button on this repo.
-# GitHub Sponsors: enroll PanStories (org) and/or MistifyTea (personal)
-#   at https://github.com/sponsors/<account>
-# Ko-fi: instant, approval-free fallback — create the page at ko-fi.com/panstories
-github: [PanStories, MistifyTea]
+# Enables the "Sponsor" heart button on this repo -> routes to Ko-fi (the working path).
+#
+# Why GitHub Sponsors is NOT used:
+#   - GitHub Sponsors payouts go through Stripe Connect to a BANK account, not PayPal.
+#   - Taiwan and mainland China are NOT in GitHub's supported payout regions
+#     (only Hong Kong SAR & Macao SAR are). So neither the personal account
+#     (MistifyTea, now opted out of enrollment) nor the PanStories org can receive payouts.
+#   - A Taiwan PayPal account therefore cannot unlock GitHub Sponsors.
+#
+# Ko-fi + the owner's Taiwan PayPal account is the instant, approval-free,
+# actually-receivable payout path. Create the page at https://ko-fi.com/panstories
 ko_fi: panstories
