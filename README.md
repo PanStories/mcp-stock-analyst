@@ -1,6 +1,6 @@
 # MCP Stock Analyst 📈
 
-[English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文)
+[English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文) | [🌍 Local Guides](#local-market-guides)
 
 ---
 
@@ -469,6 +469,84 @@ Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `
 ## 授權條款
 
 MIT
+
+---
+
+<a name="local-market-guides"></a>
+
+# Local Market Guides · 本地市場指南
+
+Native-language quick guides for the five newly-added markets, ordered by the size of each
+country's stock-market capitalization (source: WFE / World Bank 2025 totals):
+
+**Japan (~$6.4T) → France (~$3.4T) → Germany (~$2.0T) → South Korea (~$1.7T) → Malaysia (~$0.4T).**
+
+Every stock below is written as **English name · native name**, and every ticker is served free
+by **Yahoo Finance** (no API key).
+
+### 日本語 — 日本市場 (Japan) · ≈ $6.4T
+
+日本の株式は **Yahoo Finance** から無料で取得できます。東京証券取引所（JPX）の銘柄には `.T` を付けます（例：`7203.T`）。
+
+| Symbol | Name (English · 日本語) |
+|---|---|
+| `7203.T` | Toyota Motor · トヨタ自動車 |
+| `6758.T` | Sony Group · ソニーグループ |
+| `8306.T` | Mitsubishi UFJ Financial Group · 三菱UFJフィナンシャル・グループ |
+| `6861.T` | Keyence · キーエンス |
+| `^N225` | Nikkei 225 · 日経平均株価 |
+
+### Français — Marché français (France) · ≈ $3.4T
+
+Les actions françaises sont disponibles gratuitement via **Yahoo Finance**. Les titres d'Euronext Paris utilisent le suffixe `.PA` (ex. : `MC.PA`).
+
+| Symbole | Nom (anglais · français) |
+|---|---|
+| `MC.PA` | LVMH (Moët Hennessy Louis Vuitton) · LVMH |
+| `OR.PA` | L'Oréal · L'Oréal |
+| `TTE.PA` | TotalEnergies · TotalEnergies |
+| `AIR.PA` | Airbus · Airbus |
+| `SAN.PA` | Sanofi · Sanofi |
+| `^FCHI` | CAC 40 · CAC 40 |
+
+### Deutsch — Deutscher Markt (Germany) · ≈ $2.0T
+
+Deutsche Aktien erhalten Sie kostenlos über **Yahoo Finance**. Werte an Xetra / Frankfurt verwenden die Endung `.DE` (bzw. `.F` für Frankfurt; z. B. `SAP.DE`).
+
+| Symbol | Name (englisch · deutsch) |
+|---|---|
+| `SAP.DE` | SAP SE · SAP SE |
+| `SIE.DE` | Siemens · Siemens AG |
+| `ALV.DE` | Allianz · Allianz SE |
+| `DTE.DE` | Deutsche Telekom · Deutsche Telekom AG |
+| `BMW.DE` | BMW · Bayerische Motoren Werke AG |
+| `^GDAXI` | DAX 40 · DAX |
+
+### 한국어 — 한국 시장 (South Korea) · ≈ $1.7T
+
+한국 주식은 **Yahoo Finance**에서 무료로 제공됩니다. 한국거래소(KRX) 종목은 `.KS`(유가증권시장) 또는 `.KQ`(코스닥) 접미사를 사용합니다 (예: `005930.KS`).
+
+| 심볼 | 이름 (영어 · 한국어) |
+|---|---|
+| `005930.KS` | Samsung Electronics · 삼성전자 |
+| `000660.KS` | SK hynix · SK하이닉스 |
+| `035420.KS` | NAVER · 네이버 |
+| `005380.KS` | Hyundai Motor · 현대자동차 |
+| `051910.KS` | LG Chem · LG화학 |
+| `^KS11` | KOSPI · 코스피 |
+
+### Bahasa Melayu — Pasaran Malaysia (Malaysia) · ≈ $0.4T
+
+Saham Malaysia didapati secara percuma melalui **Yahoo Finance**. Saham Bursa Malaysia menggunakan akhiran `.KL` (cth: `1295.KL`).
+
+| Simbol | Nama (Inggeris · Melayu) |
+|---|---|
+| `1295.KL` | Public Bank · Public Bank Berhad |
+| `1155.KL` | Maybank · Malayan Banking Berhad |
+| `1023.KL` | CIMB Group · CIMB Group Berhad |
+| `5347.KL` | Tenaga Nasional · Tenaga Nasional Berhad |
+| `6012.KL` | Maxis · Maxis Berhad |
+| `^KLSE` | FTSE Bursa Malaysia KLCI · Indeks Komposit Kuala Lumpur |
 
 ---
 
