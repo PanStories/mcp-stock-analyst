@@ -1,10 +1,11 @@
 /**
- * 行情数据层：腾讯免费接口（qt.gtimg.cn / web.ifzq.gtimg.cn）+ Yahoo（台湾市场）
+ * 行情数据层：腾讯免费接口（qt.gtimg.cn / web.ifzq.gtimg.cn）+ Yahoo（全球市场）
  * 无需 API key，无配额限制
- * 支持：A股(sh/sz/bj) / 港股(hk) / 美股(us) / 台湾(tw，走 Yahoo)
+ * 腾讯支持：A股(sh/sz/bj) / 港股(hk) / 美股(us)
+ * Yahoo 支持：台湾(tw) / 日本(jp) / 印度(in) / 加拿大(ca) / 韩国(kr) / 英国(uk) / 法国(fr) / 新加坡(sg) / 德国(de) / 马来西亚(my)
  */
 
-import { isTaiwanCode, getTwQuotes, getTwKline } from './yahoo.js';
+import { isGlobalCode, getGlobalQuotes, getGlobalKline } from './yahoo.js';
 
 export interface Quote {
   code: string;          // 标准代码，如 sh600519
@@ -16,17 +17,17 @@ export interface Quote {
   prevClose: number;
   high: number;
   low: number;
-  volume: number;        // 成交量（A股:手 / 港股:股 / 美股:股）
-  turnover: number;      // 成交额（元/港币/美元）
-  market: 'sh' | 'sz' | 'bj' | 'hk' | 'us' | 'tw';
+  volume: number;        // 成交量（A股:手 / 港股:股 / 美股:股 / 全球:股）
+  turnover: number;      // 成交额（元/港币/美元；Yahoo 市场为 0）
+  market: 'sh' | 'sz' | 'bj' | 'hk' | 'us' | 'tw' | 'jp' | 'in' | 'ca' | 'kr' | 'uk' | 'fr' | 'sg' | 'de' | 'my' | 'ix';
 }
 
 /** 把用户输入的代码标准化为腾讯格式（台湾标的原样透传，由 Yahoo 层处理） */
 export function normalizeCode(input: string): string {
   const code = input.trim();
 
-  // 台湾标的：tw2330 / 2330.TW / 5483.TWO / ^TWII
-  if (isTaiwanCode(code)) return code;
+  // 全球标的（台湾 + 9 个新市场）：原样透传，由 Yahoo 层处理
+  if (isGlobalCode(code)) return code;
 
   // 已经带前缀 sh600519 / hk00700 / usAAPL
   const m = code.match(/^(sh|sz|bj|hk|us)([\w.]+)$/i);
@@ -64,20 +65,20 @@ const MARKET_MAP: Record<string, Quote['market']> = {
 const isNum = (s: string | undefined) =>
   s !== undefined && s !== '' && !Number.isNaN(parseFloat(s));
 
-/** 实时报价：台湾走 Yahoo，其余走腾讯（解析 v_sh600519="1~贵州茅台~600519~..." 格式） */
+/** 实时报价：全球市场（台湾 + 9 个新市场）走 Yahoo，其余走腾讯 */
 export async function getQuotes(codes: string[]): Promise<Quote[]> {
-  const twCodes: string[] = [];
+  const globalCodes: string[] = [];
   const cnCodes: string[] = [];
   for (const c of codes) {
-    if (isTaiwanCode(c)) twCodes.push(c);
+    if (isGlobalCode(c)) globalCodes.push(c);
     else cnCodes.push(normalizeCode(c));
   }
 
-  const [cnQuotes, twQuotes] = await Promise.all([
+  const [cnQuotes, globalQuotes] = await Promise.all([
     cnCodes.length ? fetchTencentQuotes(cnCodes) : Promise.resolve([]),
-    twCodes.length ? getTwQuotes(twCodes) : Promise.resolve([]),
+    globalCodes.length ? getGlobalQuotes(globalCodes) : Promise.resolve([]),
   ]);
-  return [...cnQuotes, ...twQuotes];
+  return [...cnQuotes, ...globalQuotes];
 }
 
 /** 腾讯批量报价（A股/港股/美股） */
@@ -155,7 +156,7 @@ export async function getKline(
   days = 120,
   period: 'day' | 'week' | 'month' = 'day'
 ): Promise<KlineItem[]> {
-  if (isTaiwanCode(code)) return getTwKline(code, days, period);
+  if (isGlobalCode(code)) return getGlobalKline(code, days, period);
 
   const full = normalizeCode(code);
   const n = Math.min(Math.max(days, 20), 640);

@@ -8,7 +8,7 @@
 
 # MCP Stock Analyst (English)
 
-A Model Context Protocol (**MCP**) server delivering stock market data for **China A-shares, Hong Kong, US and Taiwan markets** — live quotes, smart symbol search and historical K-lines.
+A Model Context Protocol (**MCP**) server delivering stock market data across **13 markets** — China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany and Malaysia — live quotes, smart symbol search and historical K-lines.
 
 - **Zero-cost data**: powered by free public market-data APIs (Tencent for A-share/HK/US, Yahoo Finance for Taiwan), no API key, no quota
 - **3 practical tools**: real-time quotes (batch up to 10), fuzzy search (Chinese name / pinyin / ticker code), historical candlesticks
@@ -19,20 +19,44 @@ A Model Context Protocol (**MCP**) server delivering stock market data for **Chi
 
 ## Tools
 
-- **`get_quote`** — Real-time quote for one or many symbols (A-share / HK / US / Taiwan, up to 10 per call). Example: `600519,00700,AAPL,2330.TW`
+- **`get_quote`** — Real-time quote for one or many symbols (all 13 markets, up to 10 per call). Example: `600519,00700,AAPL,2330.TW,7203.T,RELIANCE.NS,005930.KS,HSBA.L,MC.PA,SAP.DE,RY.TO,D05.SI,1295.KL`
 - **`search_stock`** — Fuzzy lookup by Chinese name, pinyin initials, partial code or English name. Example: `茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC`
 - **`get_kline`** — Historical candlesticks (day / week / month, 20–640 bars). Example: `600519` or `2330.TW`, period=`day`
 
-All three tools work across all four markets — no separate tool per exchange.
+All three tools work across every supported market — no separate tool per exchange.
 
-### Taiwan stock codes
+## Supported markets
 
-Taiwan (TWSE listed / TPEx OTC) stocks are served via Yahoo Finance. Accepted formats:
+| Market | Example | Yahoo suffix |
+|---|---|---|
+| China A-shares | `600519` | — (Tencent) |
+| Hong Kong | `00700` | — (Tencent) |
+| United States | `AAPL` | — (Tencent) |
+| Taiwan | `2330.TW` | `.TW` / `.TWO` |
+| Japan | `7203.T` | `.T` |
+| India | `RELIANCE.NS` | `.NS` / `.BO` |
+| Canada | `RY.TO` | `.TO` / `.V` |
+| South Korea | `005930.KS` | `.KS` / `.KQ` |
+| United Kingdom | `HSBA.L` | `.L` |
+| France | `MC.PA` | `.PA` |
+| Singapore | `D05.SI` | `.SI` |
+| Germany | `SAP.DE` | `.DE` / `.F` |
+| Malaysia | `1295.KL` | `.KL` |
 
-- `2330.TW` — TWSE listed (explicit)
-- `5483.TWO` — TPEx OTC (explicit)
-- `tw2330` — shorthand; the server auto-detects the exchange (tries `.TW` first, then `.TWO`)
-- `^TWII` — Taiwan Capitalization Weighted Index (TAIEX)
+### Global stock codes (Yahoo Finance)
+
+Everything outside mainland China / Hong Kong / US — Taiwan plus Japan, India, Canada, South Korea, UK, France, Singapore, Germany and Malaysia — is served by **Yahoo Finance** (free, no key). Use the exchange suffix shown above:
+
+- `7203.T` — Tokyo (explicit)
+- `RELIANCE.NS` / `TCS.NS` — NSE India (`.BO` = BSE)
+- `RY.TO` / `TD.TO` — Toronto (`.V` = TSX Venture)
+- `005930.KS` — Korea KOSPI (`.KQ` = KOSDAQ)
+- `HSBA.L` — London
+- `MC.PA` — Paris (Euronext)
+- `D05.SI` — Singapore
+- `SAP.DE` — Xetra Germany (`.F` = Frankfurt)
+- `1295.KL` — Malaysia
+- `^TWII`, `^N225`, `^FTSE`, `^NSEI`, `^GDAXI` … — market indices (any Yahoo index symbol works)
 
 ## Connect (recommended: hosted endpoint)
 
@@ -118,13 +142,14 @@ The Actor definition (`.actor/actor.json`) already enables **Standby mode** with
 ## Tech stack
 
 - Node.js ≥ 18, TypeScript, official `@modelcontextprotocol/sdk`
-- Data source: Tencent public market APIs (A-share/HK/US, free, no key) + Yahoo Finance chart API (Taiwan, free, no key)
+- Data source: Tencent public market APIs (A-share/HK/US, free, no key) + Yahoo Finance chart API (Taiwan + Japan/India/Canada/Korea/UK/France/Singapore/Germany/Malaysia, free, no key)
 - Multi-stage Docker build (`node:20-alpine`)
 
 ## Roadmap
 
 - [x] Pay-per-event billing
 - [x] Taiwan market support (TWSE / TPEx / TAIEX via Yahoo Finance)
+- [x] Global markets: Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia (via Yahoo Finance)
 - [ ] Money flow / dragon-tiger list data
 - [ ] Financial report summaries
 - [ ] API-key auth layer (self-hosting)
@@ -139,7 +164,7 @@ MIT
 
 # MCP Stock Analyst（简体中文）
 
-一个提供 **A股 / 港股 / 美股 / 台湾股** 行情数据的 MCP (Model Context Protocol) 服务器——实时报价、智能搜索、历史K线。
+一个覆盖 **13 个市场** 的 MCP (Model Context Protocol) 服务器——A股/港股/美股/台股/日本/印度/加拿大/韩国/英国/法国/新加坡/德国/马来西亚——实时报价、智能搜索、历史K线。
 
 - **零成本数据源**：A股/港股/美股用腾讯免费公开行情接口，台湾股用 Yahoo Finance，均无需 API key，无配额限制
 - **三个实用工具**：实时报价（单次最多 10 个标的）、智能搜索（中文名/拼音/代码）、历史K线
@@ -150,20 +175,44 @@ MIT
 
 ## 工具列表
 
-- **`get_quote`** —— 实时报价，支持批量（A股/港股/美股/台湾股，单次最多 10 个）。示例：`600519,00700,AAPL,2330.TW`
+- **`get_quote`** —— 实时报价，支持批量（13 个市场通用，单次最多 10 个）。示例：`600519,00700,AAPL,2330.TW,7203.T,RELIANCE.NS,005930.KS,HSBA.L,MC.PA,SAP.DE,RY.TO,D05.SI,1295.KL`
 - **`search_stock`** —— 智能搜索：中文名/拼音首字母/部分代码/英文名。示例：`茅台` / `GZMT` / `NVIDIA` / `台积电` / `TSMC`
 - **`get_kline`** —— 历史K线（日/周/月，20–640 根）。示例：`600519` 或 `2330.TW`，period=`day`
 
-三个工具在四个市场通用，不需要按交易所分别调用。
+三个工具在 13 个市场通用，不需要按交易所分别调用。
 
-### 台湾股票代码格式
+## 支持的市场
 
-台湾股（TWSE 上市 / TPEx 上柜）走 Yahoo Finance 数据源，支持以下输入格式：
+| 市场 | 示例 | Yahoo 后缀 |
+|---|---|---|
+| A股 | `600519` | —（腾讯） |
+| 港股 | `00700` | —（腾讯） |
+| 美股 | `AAPL` | —（腾讯） |
+| 台湾 | `2330.TW` | `.TW` / `.TWO` |
+| 日本 | `7203.T` | `.T` |
+| 印度 | `RELIANCE.NS` | `.NS` / `.BO` |
+| 加拿大 | `RY.TO` | `.TO` / `.V` |
+| 韩国 | `005930.KS` | `.KS` / `.KQ` |
+| 英国 | `HSBA.L` | `.L` |
+| 法国 | `MC.PA` | `.PA` |
+| 新加坡 | `D05.SI` | `.SI` |
+| 德国 | `SAP.DE` | `.DE` / `.F` |
+| 马来西亚 | `1295.KL` | `.KL` |
 
-- `2330.TW` —— 上市股票（显式指定）
-- `5483.TWO` —— 上柜股票（显式指定）
-- `tw2330` —— 简写；服务端自动探测交易所（先试 `.TW`，再试 `.TWO`）
-- `^TWII` —— 台湾加权指数（TAIEX）
+### 全球股票代码格式（Yahoo Finance）
+
+除 A股/港股/美股外的所有市场——台湾以及日本、印度、加拿大、韩国、英国、法国、新加坡、德国、马来西亚——均由 **Yahoo Finance** 提供（免费、无 key）。请使用上表对应的交易所后缀：
+
+- `7203.T` —— 东京（显式指定）
+- `RELIANCE.NS` / `TCS.NS` —— 印度 NSE（`.BO` = BSE）
+- `RY.TO` / `TD.TO` —— 多伦多（`.V` = TSX Venture）
+- `005930.KS` —— 韩国 KOSPI（`.KQ` = KOSDAQ）
+- `HSBA.L` —— 伦敦
+- `MC.PA` —— 巴黎（泛欧交易所）
+- `D05.SI` —— 新加坡
+- `SAP.DE` —— 德国 Xetra（`.F` = 法兰克福）
+- `1295.KL` —— 马来西亚
+- `^TWII`、`^N225`、`^FTSE`、`^NSEI`、`^GDAXI` … —— 市场指数（任意 Yahoo 指数符号均可）
 
 ## 接入方式（推荐：云端端点）
 
@@ -249,13 +298,14 @@ Actor 定义（`.actor/actor.json`）已启用 **Standby 模式**，MCP 路径 `
 ## 技术栈
 
 - Node.js ≥ 18、TypeScript、官方 `@modelcontextprotocol/sdk`
-- 数据源：腾讯公开行情接口（A股/港股/美股，免费无 key）+ Yahoo Finance chart 接口（台湾，免费无 key）
+- 数据源：腾讯公开行情接口（A股/港股/美股，免费无 key）+ Yahoo Finance chart 接口（台湾 + 日本/印度/加拿大/韩国/英国/法国/新加坡/德国/马来西亚，免费无 key）
 - 多阶段 Docker 构建（`node:20-alpine`）
 
 ## 路线图
 
 - [x] 按事件计费
 - [x] 台湾市场支持（TWSE / TPEx / 加权指数，Yahoo Finance 数据源）
+- [x] 全球市场：日本、印度、加拿大、韩国、英国、法国、新加坡、德国、马来西亚（Yahoo Finance 数据源）
 - [ ] 资金流向 / 龙虎榜
 - [ ] 财报摘要
 - [ ] 自定义 API key 鉴权层（自托管时用）
@@ -270,7 +320,7 @@ MIT
 
 # MCP Stock Analyst（繁體中文）
 
-一個提供 **A股 / 港股 / 美股 / 台股** 行情資料的 MCP (Model Context Protocol) 伺服器——即時報價、智慧搜尋、歷史K線。
+一個覆蓋 **13 個市場** 的 MCP (Model Context Protocol) 伺服器——A股/港股/美股/台股/日本/印度/加拿大/韓國/英國/法國/新加坡/德國/馬來西亞——即時報價、智慧搜尋、歷史K線。
 
 - **零成本資料源**：A股/港股/美股使用騰訊免費公開行情介面，台股使用 Yahoo Finance，皆無需 API key，無配額限制
 - **三個實用工具**：即時報價（單次最多 10 個標的）、智慧搜尋（中文名稱/拼音/代碼）、歷史K線
@@ -281,20 +331,44 @@ MIT
 
 ## 工具列表
 
-- **`get_quote`** —— 即時報價，支援批量（A股/港股/美股/台股，單次最多 10 個）。範例：`600519,00700,AAPL,2330.TW`
+- **`get_quote`** —— 即時報價，支援批量（13 個市場通用，單次最多 10 個）。範例：`600519,00700,AAPL,2330.TW,7203.T,RELIANCE.NS,005930.KS,HSBA.L,MC.PA,SAP.DE,RY.TO,D05.SI,1295.KL`
 - **`search_stock`** —— 智慧搜尋：中文名稱/拼音首字母/部分代碼/英文名稱。範例：`茅台` / `GZMT` / `NVIDIA` / `台積電` / `TSMC`
 - **`get_kline`** —— 歷史K線（日/週/月，20–640 根）。範例：`600519` 或 `2330.TW`，period=`day`
 
-三個工具在四個市場通用，不需要按交易所分別呼叫。
+三個工具在 13 個市場通用，不需要按交易所分別呼叫。
 
-### 台灣股票代碼格式
+## 支援的市場
 
-台股（TWSE 上市 / TPEx 上櫃）使用 Yahoo Finance 資料源，支援以下輸入格式：
+| 市場 | 範例 | Yahoo 後綴 |
+|---|---|---|
+| A股 | `600519` | —（騰訊） |
+| 港股 | `00700` | —（騰訊） |
+| 美股 | `AAPL` | —（騰訊） |
+| 台灣 | `2330.TW` | `.TW` / `.TWO` |
+| 日本 | `7203.T` | `.T` |
+| 印度 | `RELIANCE.NS` | `.NS` / `.BO` |
+| 加拿大 | `RY.TO` | `.TO` / `.V` |
+| 韓國 | `005930.KS` | `.KS` / `.KQ` |
+| 英國 | `HSBA.L` | `.L` |
+| 法國 | `MC.PA` | `.PA` |
+| 新加坡 | `D05.SI` | `.SI` |
+| 德國 | `SAP.DE` | `.DE` / `.F` |
+| 馬來西亞 | `1295.KL` | `.KL` |
 
-- `2330.TW` —— 上市股票（顯式指定）
-- `5483.TWO` —— 上櫃股票（顯式指定）
-- `tw2330` —— 簡寫；伺服器自動探測交易所（先試 `.TW`，再試 `.TWO`）
-- `^TWII` —— 台灣加權指數（TAIEX）
+### 全球股票代碼格式（Yahoo Finance）
+
+除 A股/港股/美股外的所有市場——台灣以及日本、印度、加拿大、韓國、英國、法國、新加坡、德國、馬來西亞——均由 **Yahoo Finance** 提供（免費、無 key）。請使用上表對應的交易所後綴：
+
+- `7203.T` —— 東京（顯式指定）
+- `RELIANCE.NS` / `TCS.NS` —— 印度 NSE（`.BO` = BSE）
+- `RY.TO` / `TD.TO` —— 多倫多（`.V` = TSX Venture）
+- `005930.KS` —— 韓國 KOSPI（`.KQ` = KOSDAQ）
+- `HSBA.L` —— 倫敦
+- `MC.PA` —— 巴黎（泛歐交易所）
+- `D05.SI` —— 新加坡
+- `SAP.DE` —— 德國 Xetra（`.F` = 法蘭克福）
+- `1295.KL` —— 馬來西亞
+- `^TWII`、`^N225`、`^FTSE`、`^NSEI`、`^GDAXI` … —— 市場指數（任意 Yahoo 指數符號均可）
 
 ## 連接方式（推薦：雲端端點）
 
@@ -380,13 +454,14 @@ Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `
 ## 技術棧
 
 - Node.js ≥ 18、TypeScript、官方 `@modelcontextprotocol/sdk`
-- 資料源：騰訊公開行情介面（A股/港股/美股，免費無 key）+ Yahoo Finance chart 介面（台股，免費無 key）
+- 資料源：騰訊公開行情介面（A股/港股/美股，免費無 key）+ Yahoo Finance chart 介面（台股 + 日本/印度/加拿大/韓國/英國/法國/新加坡/德國/馬來西亞，免費無 key）
 - 多階段 Docker 建置（`node:20-alpine`）
 
 ## 路線圖
 
 - [x] 按事件計費
 - [x] 台灣市場支援（TWSE / TPEx / 加權指數，Yahoo Finance 資料源）
+- [x] 全球市場：日本、印度、加拿大、韓國、英國、法國、新加坡、德國、馬來西亞（Yahoo Finance 資料源）
 - [ ] 資金流向 / 龍虎榜
 - [ ] 財報摘要
 - [ ] 自訂 API key 驗證層（自架時用）
@@ -394,21 +469,20 @@ Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `
 ## 授權條款
 
 MIT
+
 ---
 
 ## Support · 赞助 · 贊助
 
 **EN** — **MCP Stock Analyst** is open source (MIT), ad-free, and delivers zero-API-key
-quotes across A-shares / Hong Kong / US / Taiwan. It is funded by the community, not by
+quotes across A-shares / Hong Kong / US / Taiwan / Japan / India / Canada / South Korea / UK / France / Singapore / Germany / Malaysia. It is funded by the community, not by
 ads. If it powers your research or agents, please support it:
 - ☕ Ko-fi (the **Sponsor** ❤️ button on this repo routes here): https://ko-fi.com/panstories
 
-**简体中文** — **MCP Stock Analyst** 开源（MIT）、无广告，提供 A股/港股/美股/台湾股零 API key 行情，
+**简体中文** — **MCP Stock Analyst** 开源（MIT）、无广告，提供 A股/港股/美股/台湾股/日本/印度/加拿大/韩国/英国/法国/新加坡/德国/马来西亚零 API key 行情，
 由社区资助而非广告。若它支撑了你的研究或智能体，欢迎赞助：点本仓库的
 **Sponsor** 按钮，或前往 Ko-fi: https://ko-fi.com/panstories
 
-**繁體中文** — **MCP Stock Analyst** 開源（MIT）、無廣告，提供 A股/港股/美股/台股零 API key 行情，
+**繁體中文** — **MCP Stock Analyst** 開源（MIT）、無廣告，提供 A股/港股/美股/台股/日本/印度/加拿大/韓國/英國/法國/新加坡/德國/馬來西亞零 API key 行情，
 由社群資助而非廣告。若它支撐了你的研究或智能體，歡迎贊助：點本倉庫的
 **Sponsor** 按鈕，或前往 Ko-fi: https://ko-fi.com/panstories
-
-Thank you! · 谢谢 · 謝謝 💙

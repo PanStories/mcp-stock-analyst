@@ -45,10 +45,10 @@ proc.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initial
 const tools = await send({ jsonrpc: '2.0', id: 2, method: 'tools/list' });
 console.log('TOOLS:', tools.result.tools.map((t) => t.name).join(', '));
 
-// 4. 调用 get_quote
+// 4. 调用 get_quote（含全球市场 Yahoo 标的）
 const q = await send({
   jsonrpc: '2.0', id: 3, method: 'tools/call',
-  params: { name: 'get_quote', arguments: { codes: '600519,AAPL,2330.TW' } },
+  params: { name: 'get_quote', arguments: { codes: '600519,AAPL,2330.TW,7203.T,RELIANCE.NS' } },
 });
 console.log('QUOTE RESULT:', q.result.content[0].text);
 

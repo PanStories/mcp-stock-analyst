@@ -4,7 +4,7 @@
  */
 
 import { getQuotes } from './tencent.js';
-import { searchTwStocks } from './yahoo.js';
+import { searchTwStocks, searchGlobalStocks } from './yahoo.js';
 
 /** 常见指数/龙头股种子表（保证搜索零依赖可用），可后续扩展 */
 const SEED: Array<{ code: string; name: string }> = [
@@ -52,6 +52,29 @@ const SEED: Array<{ code: string; name: string }> = [
   { code: '5880.TW', name: '合库金' },
   { code: '0050.TW', name: '元大台湾50' },
   { code: '0056.TW', name: '元大高股息' },
+  // ---- 全球市场（Yahoo 数据源，中文搜索靠种子表，Yahoo 端点不支持中文）----
+  { code: '7203.T', name: '丰田 Toyota' },
+  { code: '6758.T', name: '索尼 Sony' },
+  { code: '^N225', name: '日经225 Nikkei 225' },
+  { code: 'RELIANCE.NS', name: '信实工业 Reliance' },
+  { code: 'TCS.NS', name: '塔塔咨询 TCS' },
+  { code: '^NSEI', name: '印度 NIFTY 50' },
+  { code: 'RY.TO', name: '加拿大皇家银行 RBC' },
+  { code: 'TD.TO', name: '多伦多道明 TD' },
+  { code: '^GSPTSE', name: '标普/TSX 综合指数' },
+  { code: '005930.KS', name: '三星电子 Samsung' },
+  { code: '^KS11', name: '韩国综合 KOSPI' },
+  { code: 'HSBA.L', name: '汇丰控股 HSBC' },
+  { code: 'SHEL.L', name: '壳牌 Shell' },
+  { code: '^FTSE', name: '富时100 FTSE 100' },
+  { code: 'MC.PA', name: '路威酩轩 LVMH' },
+  { code: '^FCHI', name: '法国 CAC 40' },
+  { code: 'D05.SI', name: '星展银行 DBS' },
+  { code: '^STI', name: '新加坡海峡时报指数' },
+  { code: 'SAP.DE', name: '思爱普 SAP' },
+  { code: '^GDAXI', name: '德国 DAX 40' },
+  { code: '1295.KL', name: '大众银行 Public Bank' },
+  { code: '^KLSE', name: '马来西亚 KLCI' },
 ];
 
 export interface SearchHit {
@@ -110,6 +133,19 @@ export async function searchStock(query: string, limit = 8): Promise<SearchHit[]
     try {
       const twHits = await searchTwStocks(query, limit - hits.length);
       for (const h of twHits) {
+        add({ code: h.code, name: h.name, matchedBy: 'yahoo' });
+        if (hits.length >= limit) break;
+      }
+    } catch {
+      // 忽略，返回已有命中
+    }
+  }
+
+  // 4) 全球市场 Yahoo 搜索兜底（日本/印度/加拿大/韩国/英国/法国/新加坡/德国/马来西亚；仅 ASCII 查询）
+  if (hits.length < limit) {
+    try {
+      const gHits = await searchGlobalStocks(query, limit - hits.length);
+      for (const h of gHits) {
         add({ code: h.code, name: h.name, matchedBy: 'yahoo' });
         if (hits.length >= limit) break;
       }
