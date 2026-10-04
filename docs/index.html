@@ -70,6 +70,15 @@
   .pill{display:inline-block;background:var(--green-bg);color:var(--green);border-radius:6px;padding:2px 9px;font-weight:600;font-size:13px}
   .pill.free{background:#eef2f7;color:var(--muted)}
   .note{background:#fff8ec;border:1px solid #f3e0bd;border-radius:12px;padding:14px 16px;font-size:14px;color:#7a5a12;margin-top:16px}
+  /* Local Market Guides */
+  .guide-h{font-size:18px;margin:34px 0 4px;color:var(--navy)}
+  .guide-h:first-of-type{margin-top:18px}
+  .guide-note{color:var(--muted);font-size:14px;margin:0 0 12px}
+  .guide-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:6px}
+  .guide-table th,.guide-table td{padding:11px 14px;text-align:left;font-size:14px;border-bottom:1px solid var(--line);vertical-align:top}
+  .guide-table th{background:#f0f4f9;color:var(--navy);font-weight:600}
+  .guide-table tr:last-child td{border-bottom:0}
+  .guide-table td:first-child{white-space:nowrap;width:130px}
   /* Connect */
   .code{position:relative;background:#0f1b2d;color:#d6e2f1;border-radius:12px;padding:18px 18px;overflow:auto;font-size:13px;line-height:1.5}
   .code pre{margin:0;font-family:"SF Mono",Menlo,Consolas,monospace;white-space:pre}
@@ -102,6 +111,7 @@
       <a href="#tools">Tools</a>
       <a href="#pricing">Pricing</a>
       <a href="#connect">Connect</a>
+      <a href="#guides">Guides</a>
       <a href="https://github.com/PanStories/mcp-stock-analyst" target="_blank" rel="noopener">Source</a>
       <span class="lang">
         <button id="enBtn" class="active" onclick="setLang('en')">EN</button>
@@ -344,6 +354,98 @@ npm install && npm run build
 }</pre>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- LOCAL MARKET GUIDES -->
+<section id="guides">
+  <div class="wrap">
+    <h2 class="lang-en">Local Market Guides</h2>
+    <h2 class="lang-zh hidden">本地市場指南</h2>
+    <p class="sub lang-en">Native-language quick guides for the six newly-added markets, ordered by stock-market capitalization: Japan → France → Germany → South Korea → Singapore → Malaysia. Every ticker is free on Yahoo Finance; names are English · native.</p>
+    <p class="sub lang-zh hidden">六大新增市场的本地语言速查，按市值排序：日本 → 法国 → 德国 → 韩国 → 新加坡 → 马来西亚。所有代码免费来自 Yahoo Finance；名称格式为 英文 · 本地名。</p>
+
+    <h3 class="guide-h">日本語 — 日本市場 (Japan) · ≈ $6.4T</h3>
+    <p class="guide-note">日本の株式は Yahoo Finance から無料で取得できます。東京証券取引所（JPX）の銘柄には <code>.T</code> を付けます（例：<code>7203.T</code>）。</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbol</th><th>Name (English · 日本語)</th></tr></thead>
+      <tbody>
+        <tr><td><code>7203.T</code></td><td>Toyota Motor · トヨタ自動車</td></tr>
+        <tr><td><code>6758.T</code></td><td>Sony Group · ソニーグループ</td></tr>
+        <tr><td><code>8306.T</code></td><td>Mitsubishi UFJ Financial Group · 三菱UFJフィナンシャル・グループ</td></tr>
+        <tr><td><code>6861.T</code></td><td>Keyence · キーエンス</td></tr>
+        <tr><td><code>^N225</code></td><td>Nikkei 225 · 日経平均株価</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">Français — Marché français (France) · ≈ $3.4T</h3>
+    <p class="guide-note">Les actions françaises sont disponibles gratuitement via <strong>Yahoo Finance</strong>. Les titres d'Euronext Paris utilisent le suffixe <code>.PA</code> (ex. : <code>MC.PA</code>).</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbole</th><th>Nom (anglais · français)</th></tr></thead>
+      <tbody>
+        <tr><td><code>MC.PA</code></td><td>LVMH (Moët Hennessy Louis Vuitton) · LVMH</td></tr>
+        <tr><td><code>OR.PA</code></td><td>L'Oréal · L'Oréal</td></tr>
+        <tr><td><code>TTE.PA</code></td><td>TotalEnergies · TotalEnergies</td></tr>
+        <tr><td><code>AIR.PA</code></td><td>Airbus · Airbus</td></tr>
+        <tr><td><code>SAN.PA</code></td><td>Sanofi · Sanofi</td></tr>
+        <tr><td><code>^FCHI</code></td><td>CAC 40 · CAC 40</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">Deutsch — Deutscher Markt (Germany) · ≈ $2.0T</h3>
+    <p class="guide-note">Deutsche Aktien erhalten Sie kostenlos über <strong>Yahoo Finance</strong>. Werte an Xetra / Frankfurt verwenden die Endung <code>.DE</code> (bzw. <code>.F</code> für Frankfurt; z. B. <code>SAP.DE</code>).</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbol</th><th>Name (englisch · deutsch)</th></tr></thead>
+      <tbody>
+        <tr><td><code>SAP.DE</code></td><td>SAP SE · SAP SE</td></tr>
+        <tr><td><code>SIE.DE</code></td><td>Siemens · Siemens AG</td></tr>
+        <tr><td><code>ALV.DE</code></td><td>Allianz · Allianz SE</td></tr>
+        <tr><td><code>DTE.DE</code></td><td>Deutsche Telekom · Deutsche Telekom AG</td></tr>
+        <tr><td><code>BMW.DE</code></td><td>BMW · Bayerische Motoren Werke AG</td></tr>
+        <tr><td><code>^GDAXI</code></td><td>DAX 40 · DAX</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">한국어 — 한국 시장 (South Korea) · ≈ $1.7T</h3>
+    <p class="guide-note">한국 주식은 <strong>Yahoo Finance</strong>에서 무료로 제공됩니다. 한국거래소(KRX) 종목은 <code>.KS</code>(유가증권시장) 또는 <code>.KQ</code>(코스닥) 접미사를 사용합니다 (예: <code>005930.KS</code>).</p>
+    <table class="guide-table">
+      <thead><tr><th>심볼</th><th>이름 (영어 · 한국어)</th></tr></thead>
+      <tbody>
+        <tr><td><code>005930.KS</code></td><td>Samsung Electronics · 삼성전자</td></tr>
+        <tr><td><code>000660.KS</code></td><td>SK hynix · SK하이닉스</td></tr>
+        <tr><td><code>035420.KS</code></td><td>NAVER · 네이버</td></tr>
+        <tr><td><code>005380.KS</code></td><td>Hyundai Motor · 현대자동차</td></tr>
+        <tr><td><code>051910.KS</code></td><td>LG Chem · LG화학</td></tr>
+        <tr><td><code>^KS11</code></td><td>KOSPI · 코스피</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">English — Singapore market (Singapore) · ≈ $0.64T</h3>
+    <p class="guide-note">Singapore stocks are available free on <strong>Yahoo Finance</strong>. SGX main-board listings use the <code>.SI</code> suffix (e.g. <code>D05.SI</code>). English is the native corporate language, so names appear as the English name alone.</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbol</th><th>Name (English)</th></tr></thead>
+      <tbody>
+        <tr><td><code>D05.SI</code></td><td>DBS Group</td></tr>
+        <tr><td><code>O39.SI</code></td><td>OCBC Bank</td></tr>
+        <tr><td><code>U11.SI</code></td><td>United Overseas Bank (UOB)</td></tr>
+        <tr><td><code>Z74.SI</code></td><td>Singtel</td></tr>
+        <tr><td><code>^STI</code></td><td>Straits Times Index</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">Bahasa Melayu — Pasaran Malaysia (Malaysia) · ≈ $0.43T</h3>
+    <p class="guide-note">Saham Malaysia didapati secara percuma melalui <strong>Yahoo Finance</strong>. Saham Bursa Malaysia menggunakan akhiran <code>.KL</code> (cth: <code>1295.KL</code>).</p>
+    <table class="guide-table">
+      <thead><tr><th>Simbol</th><th>Nama (Inggeris · Melayu)</th></tr></thead>
+      <tbody>
+        <tr><td><code>1295.KL</code></td><td>Public Bank · Public Bank Berhad</td></tr>
+        <tr><td><code>1155.KL</code></td><td>Maybank · Malayan Banking Berhad</td></tr>
+        <tr><td><code>1023.KL</code></td><td>CIMB Group · CIMB Group Berhad</td></tr>
+        <tr><td><code>5347.KL</code></td><td>Tenaga Nasional · Tenaga Nasional Berhad</td></tr>
+        <tr><td><code>6012.KL</code></td><td>Maxis · Maxis Berhad</td></tr>
+        <tr><td><code>^KLSE</code></td><td>FTSE Bursa Malaysia KLCI · Indeks Komposit Kuala Lumpur</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 

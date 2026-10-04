@@ -476,13 +476,14 @@ MIT
 
 # Local Market Guides · 本地市場指南
 
-Native-language quick guides for the five newly-added markets, ordered by the size of each
+Native-language quick guides for the six newly-added markets, ordered by the size of each
 country's stock-market capitalization (source: WFE / World Bank 2025 totals):
 
-**Japan (~$6.4T) → France (~$3.4T) → Germany (~$2.0T) → South Korea (~$1.7T) → Malaysia (~$0.4T).**
+**Japan (~$6.4T) → France (~$3.4T) → Germany (~$2.0T) → South Korea (~$1.7T) → Singapore (~$0.64T) → Malaysia (~$0.43T).**
 
 Every stock below is written as **English name · native name**, and every ticker is served free
-by **Yahoo Finance** (no API key).
+by **Yahoo Finance** (no API key). For Singapore (English-speaking), the native name is simply the
+English name.
 
 ### 日本語 — 日本市場 (Japan) · ≈ $6.4T
 
@@ -535,7 +536,21 @@ Deutsche Aktien erhalten Sie kostenlos über **Yahoo Finance**. Werte an Xetra /
 | `051910.KS` | LG Chem · LG화학 |
 | `^KS11` | KOSPI · 코스피 |
 
-### Bahasa Melayu — Pasaran Malaysia (Malaysia) · ≈ $0.4T
+### English — Singapore market (Singapore) · ≈ $0.64T
+
+Singapore stocks are available free on **Yahoo Finance**. SGX main-board listings use the `.SI`
+suffix (e.g. `D05.SI`). English is the native corporate language, so names appear as the English
+name alone.
+
+| Symbol | Name (English) |
+|---|---|
+| `D05.SI` | DBS Group |
+| `O39.SI` | OCBC Bank |
+| `U11.SI` | United Overseas Bank (UOB) |
+| `Z74.SI` | Singtel |
+| `^STI` | Straits Times Index |
+
+### Bahasa Melayu — Pasaran Malaysia (Malaysia) · ≈ $0.43T
 
 Saham Malaysia didapati secara percuma melalui **Yahoo Finance**. Saham Bursa Malaysia menggunakan akhiran `.KL` (cth: `1295.KL`).
 
