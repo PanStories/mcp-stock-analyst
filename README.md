@@ -476,14 +476,14 @@ MIT
 
 # Local Market Guides · 本地市場指南
 
-Native-language quick guides for the six newly-added markets, ordered by the size of each
+Native-language quick guides for the nine newly-added markets, ordered by the size of each
 country's stock-market capitalization (source: WFE / World Bank 2025 totals):
 
-**Japan (~$6.4T) → France (~$3.4T) → Germany (~$2.0T) → South Korea (~$1.7T) → Singapore (~$0.64T) → Malaysia (~$0.43T).**
+**Japan (~$6.4T) → India (~$5.3T) → Canada (~$3.5T) → France (~$3.4T) → UK (~$3.2T) → Germany (~$2.0T) → South Korea (~$1.7T) → Singapore (~$0.64T) → Malaysia (~$0.43T).**
 
 Every stock below is written as **English name · native name**, and every ticker is served free
-by **Yahoo Finance** (no API key). For Singapore (English-speaking), the native name is simply the
-English name.
+by **Yahoo Finance** (no API key). For English-speaking markets (Singapore, India, Canada, UK),
+the native name is simply the English name.
 
 ### 日本語 — 日本市場 (Japan) · ≈ $6.4T
 
@@ -497,6 +497,34 @@ English name.
 | `6861.T` | Keyence · キーエンス |
 | `^N225` | Nikkei 225 · 日経平均株価 |
 
+### English — India market (India) · ≈ $5.3T
+
+India stocks are available free on **Yahoo Finance**. NSE listings use the `.NS` suffix and BSE
+listings use `.BO` (e.g. `RELIANCE.NS`). English is the corporate language, so names appear as the
+English name alone.
+
+| Symbol | Name (English) |
+|---|---|
+| `RELIANCE.NS` | Reliance Industries |
+| `TCS.NS` | Tata Consultancy Services |
+| `HDFCBANK.NS` | HDFC Bank |
+| `INFY.NS` | Infosys |
+| `^NSEI` | NIFTY 50 |
+
+### English — Canada market (Canada) · ≈ $3.5T
+
+Canada stocks are available free on **Yahoo Finance**. TSX main-board listings use the `.TO`
+suffix and TSX Venture uses `.V` (e.g. `RY.TO`). English is the native language, so names appear
+as the English name alone.
+
+| Symbol | Name (English) |
+|---|---|
+| `RY.TO` | Royal Bank of Canada |
+| `TD.TO` | Toronto-Dominion Bank |
+| `ENB.TO` | Enbridge |
+| `CNR.TO` | Canadian National Railway |
+| `^GSPTSE` | S&P/TSX Composite |
+
 ### Français — Marché français (France) · ≈ $3.4T
 
 Les actions françaises sont disponibles gratuitement via **Yahoo Finance**. Les titres d'Euronext Paris utilisent le suffixe `.PA` (ex. : `MC.PA`).
@@ -509,6 +537,19 @@ Les actions françaises sont disponibles gratuitement via **Yahoo Finance**. Les
 | `AIR.PA` | Airbus · Airbus |
 | `SAN.PA` | Sanofi · Sanofi |
 | `^FCHI` | CAC 40 · CAC 40 |
+
+### English — UK market (United Kingdom) · ≈ $3.2T
+
+UK stocks are available free on **Yahoo Finance**. London Stock Exchange listings use the `.L`
+suffix (e.g. `HSBA.L`). English is the native language, so names appear as the English name alone.
+
+| Symbol | Name (English) |
+|---|---|
+| `HSBA.L` | HSBC Holdings |
+| `SHEL.L` | Shell |
+| `BP.L` | BP |
+| `AZN.L` | AstraZeneca |
+| `^FTSE` | FTSE 100 |
 
 ### Deutsch — Deutscher Markt (Germany) · ≈ $2.0T
 

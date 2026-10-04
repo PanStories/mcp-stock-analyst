@@ -362,8 +362,8 @@ npm install && npm run build
   <div class="wrap">
     <h2 class="lang-en">Local Market Guides</h2>
     <h2 class="lang-zh hidden">本地市場指南</h2>
-    <p class="sub lang-en">Native-language quick guides for the six newly-added markets, ordered by stock-market capitalization: Japan → France → Germany → South Korea → Singapore → Malaysia. Every ticker is free on Yahoo Finance; names are English · native.</p>
-    <p class="sub lang-zh hidden">六大新增市场的本地语言速查，按市值排序：日本 → 法国 → 德国 → 韩国 → 新加坡 → 马来西亚。所有代码免费来自 Yahoo Finance；名称格式为 英文 · 本地名。</p>
+    <p class="sub lang-en">Native-language quick guides for the nine newly-added markets, ordered by stock-market capitalization: Japan → India → Canada → France → UK → Germany → South Korea → Singapore → Malaysia. Every ticker is free on Yahoo Finance; English-speaking markets show the English name alone.</p>
+    <p class="sub lang-zh hidden">九大新增市场的本地语言速查，按市值排序：日本 → 印度 → 加拿大 → 法国 → 英国 → 德国 → 韩国 → 新加坡 → 马来西亚。所有代码免费来自 Yahoo Finance；英语市场仅显示英文名。</p>
 
     <h3 class="guide-h">日本語 — 日本市場 (Japan) · ≈ $6.4T</h3>
     <p class="guide-note">日本の株式は Yahoo Finance から無料で取得できます。東京証券取引所（JPX）の銘柄には <code>.T</code> を付けます（例：<code>7203.T</code>）。</p>
@@ -378,6 +378,32 @@ npm install && npm run build
       </tbody>
     </table>
 
+    <h3 class="guide-h">English — India market (India) · ≈ $5.3T</h3>
+    <p class="guide-note">India stocks are available free on <strong>Yahoo Finance</strong>. NSE listings use the <code>.NS</code> suffix and BSE listings use <code>.BO</code> (e.g. <code>RELIANCE.NS</code>). English is the corporate language, so names appear as the English name alone.</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbol</th><th>Name (English)</th></tr></thead>
+      <tbody>
+        <tr><td><code>RELIANCE.NS</code></td><td>Reliance Industries</td></tr>
+        <tr><td><code>TCS.NS</code></td><td>Tata Consultancy Services</td></tr>
+        <tr><td><code>HDFCBANK.NS</code></td><td>HDFC Bank</td></tr>
+        <tr><td><code>INFY.NS</code></td><td>Infosys</td></tr>
+        <tr><td><code>^NSEI</code></td><td>NIFTY 50</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">English — Canada market (Canada) · ≈ $3.5T</h3>
+    <p class="guide-note">Canada stocks are available free on <strong>Yahoo Finance</strong>. TSX main-board listings use the <code>.TO</code> suffix and TSX Venture uses <code>.V</code> (e.g. <code>RY.TO</code>). English is the native language, so names appear as the English name alone.</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbol</th><th>Name (English)</th></tr></thead>
+      <tbody>
+        <tr><td><code>RY.TO</code></td><td>Royal Bank of Canada</td></tr>
+        <tr><td><code>TD.TO</code></td><td>Toronto-Dominion Bank</td></tr>
+        <tr><td><code>ENB.TO</code></td><td>Enbridge</td></tr>
+        <tr><td><code>CNR.TO</code></td><td>Canadian National Railway</td></tr>
+        <tr><td><code>^GSPTSE</code></td><td>S&amp;P/TSX Composite</td></tr>
+      </tbody>
+    </table>
+
     <h3 class="guide-h">Français — Marché français (France) · ≈ $3.4T</h3>
     <p class="guide-note">Les actions françaises sont disponibles gratuitement via <strong>Yahoo Finance</strong>. Les titres d'Euronext Paris utilisent le suffixe <code>.PA</code> (ex. : <code>MC.PA</code>).</p>
     <table class="guide-table">
@@ -389,6 +415,19 @@ npm install && npm run build
         <tr><td><code>AIR.PA</code></td><td>Airbus · Airbus</td></tr>
         <tr><td><code>SAN.PA</code></td><td>Sanofi · Sanofi</td></tr>
         <tr><td><code>^FCHI</code></td><td>CAC 40 · CAC 40</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="guide-h">English — UK market (United Kingdom) · ≈ $3.2T</h3>
+    <p class="guide-note">UK stocks are available free on <strong>Yahoo Finance</strong>. London Stock Exchange listings use the <code>.L</code> suffix (e.g. <code>HSBA.L</code>). English is the native language, so names appear as the English name alone.</p>
+    <table class="guide-table">
+      <thead><tr><th>Symbol</th><th>Name (English)</th></tr></thead>
+      <tbody>
+        <tr><td><code>HSBA.L</code></td><td>HSBC Holdings</td></tr>
+        <tr><td><code>SHEL.L</code></td><td>Shell</td></tr>
+        <tr><td><code>BP.L</code></td><td>BP</td></tr>
+        <tr><td><code>AZN.L</code></td><td>AstraZeneca</td></tr>
+        <tr><td><code>^FTSE</code></td><td>FTSE 100</td></tr>
       </tbody>
     </table>
 
