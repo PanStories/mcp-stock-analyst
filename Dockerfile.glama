@@ -1,0 +1,30 @@
+# Dockerfile.glama — stdio image used for Glama container releases.
+#
+# ⚠️ Do NOT confuse this with ./Dockerfile: that one boots `build/http.js`
+#    (Apify Standby HTTP server, EXPOSE 3000). Glama builds this image and speaks
+#    MCP over **stdin/stdout (stdio)**, so the HTTP entrypoint fails the build test.
+#
+#    Glama Admin → Dockerfile admin page → set Dockerfile path to `Dockerfile.glama`.
+#
+# Note: this repo's tsconfig outDir is `build` (not `dist`), and the stdio entrypoint
+# is build/index.js while the HTTP entrypoint is build/http.js.
+
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY tsconfig.json ./
+COPY src ./src
+RUN npm run build
+
+FROM node:22-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
+
+COPY --from=build /app/build ./build
+
+# stdio transport: MCP JSON-RPC on stdin/stdout. No port is exposed.
+CMD ["node", "build/index.js"]
