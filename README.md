@@ -137,7 +137,7 @@ cd mcp-stock-analyst
 apify push             # builds the Docker image on Apify's infrastructure
 ```
 
-The Actor definition (`.actor/actor.json`) already enables **Standby mode** with MCP path `/mcp`. Your endpoint will be `https://<username>--mcp-stock-analyst.apify.actor/mcp` (verify in Console → Endpoints, or read `data.standbyUrl` from `GET https://api.apify.com/v2/acts/<actorId>?token=<token>`).
+The Actor definition (`.actor/actor.json`) already enables **Standby mode** with MCP path `/mcp`. Your endpoint will be `https://neeenja--mcp-stock-analyst.apify.actor/mcp` (verify in Console → Endpoints, or read `data.standbyUrl` from `GET https://api.apify.com/v2/acts/<actorId>?token=<token>`).
 
 ## Tech stack
 
@@ -293,7 +293,7 @@ cd mcp-stock-analyst
 apify push             # 在 Apify 平台侧构建 Docker 镜像
 ```
 
-Actor 定义（`.actor/actor.json`）已启用 **Standby 模式**，MCP 路径 `/mcp`。端点形如 `https://<username>--mcp-stock-analyst.apify.actor/mcp`（以 Console → Endpoints 页为准，或通过 `GET https://api.apify.com/v2/acts/<actorId>?token=<token>` 返回的 `data.standbyUrl` 字段获取准确地址）。
+Actor 定义（`.actor/actor.json`）已启用 **Standby 模式**，MCP 路径 `/mcp`。端点形如 `https://neeenja--mcp-stock-analyst.apify.actor/mcp`（以 Console → Endpoints 页为准，或通过 `GET https://api.apify.com/v2/acts/<actorId>?token=<token>` 返回的 `data.standbyUrl` 字段获取准确地址）。
 
 ## 技术栈
 
@@ -449,7 +449,7 @@ cd mcp-stock-analyst
 apify push             # 在 Apify 平台側建置 Docker 映像檔
 ```
 
-Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `/mcp`。端點形如 `https://<username>--mcp-stock-analyst.apify.actor/mcp`（以 Console → Endpoints 頁為準）。
+Actor 定義（`.actor/actor.json`）已啟用 **Standby 模式**，MCP 路徑 `/mcp`。端點形如 `https://neeenja--mcp-stock-analyst.apify.actor/mcp`（以 Console → Endpoints 頁為準）。
 
 ## 技術棧
 
