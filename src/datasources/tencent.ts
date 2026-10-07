@@ -7,6 +7,22 @@
 
 import { isGlobalCode, getGlobalQuotes, getGlobalKline } from './yahoo.js';
 
+/**
+ * Decode a GBK-encoded response body to a JS string.
+ *
+ * Node's built-in `TextDecoder` supports 'gbk' when built with full ICU, which
+ * is the default for official Node builds. If it is unavailable we fall back to
+ * latin1 so the caller still gets a usable (if mojibake) string rather than a
+ * hard crash.
+ */
+function decodeGbk(buffer: ArrayBuffer): string {
+  try {
+    return new TextDecoder('gbk').decode(buffer);
+  } catch {
+    return Buffer.from(buffer).toString('latin1');
+  }
+}
+
 export interface Quote {
   code: string;          // 标准代码，如 sh600519
   name: string;          // 名称
@@ -87,7 +103,9 @@ async function fetchTencentQuotes(normalized: string[]): Promise<Quote[]> {
   const res = await fetch(url, {
     headers: { 'User-Agent': 'Mozilla/5.0', Referer: 'https://gu.qq.com/' },
   });
-  const text = await res.text();
+  // qt.gtimg.cn responds with `charset=GBK`. res.text() assumes UTF-8, which turns
+  // stock names into U+FFFD replacement chars (中国平安 -> ��Ԫƽ��). Decode as GBK.
+  const text = decodeGbk(await res.arrayBuffer());
   const quotes: Quote[] = [];
 
   const re = /v_(\w+)="([^"]+)"/g;

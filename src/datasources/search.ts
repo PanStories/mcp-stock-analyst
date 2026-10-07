@@ -103,6 +103,21 @@ const SEED: Array<{ code: string; name: string }> = [
   { code: '^KLSE', name: 'FTSE Bursa Malaysia KLCI' },
 ];
 
+/**
+ * smartbox.gtimg.cn 声明 `charset=utf-8`，但正文里把中文写成 JS 转义序列：
+ *   v_hint="sh~600519~\u8d35\u5dde\u8305\u53f0~gzmt~GP-A"
+ * 如果直接把这段字符串交给 agent，用户看到的就是 `\u8d35\u5dde\u8305\u53f0`
+ * 而不是「贵州茅台」。这里把 \uXXXX 还原成真实字符。
+ */
+function decodeJsEscapes(s: string): string {
+  if (!s.includes('\\u')) return s;
+  try {
+    return JSON.parse(`"${s.replace(/"/g, '\\"')}"`);
+  } catch {
+    return s.replace(/\\u([\da-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  }
+}
+
 export interface SearchHit {
   code: string;
   name: string;
@@ -143,7 +158,7 @@ export async function searchStock(query: string, limit = 8): Promise<SearchHit[]
         if (parts.length >= 3 && parts[0] && parts[1]) {
           add({
             code: `${parts[0]}${parts[1]}`,
-            name: parts[2],
+            name: decodeJsEscapes(parts[2]),
             matchedBy: 'smartbox',
           });
           if (hits.length >= limit) break;

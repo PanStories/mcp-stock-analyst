@@ -16,7 +16,7 @@ const TURNOVER_MARKETS = new Set(['sh', 'sz', 'bj', 'hk', 'us']);
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'mcp-stock-analyst',
-    version: '0.3.0',
+    version: '0.3.1',
   });
 
   // ---------- 工具 1：实时报价 ----------

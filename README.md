@@ -4,13 +4,17 @@
 
 ---
 
-<a name="english"></a>
+<a id="english"></a>
 
-# MCP Stock Analyst (English)
+# English · MCP Stock Analyst
+
+**Current version: 0.3.1** · 13 markets · pay-per-call, no subscription
+
+> Real-time quotes, fuzzy symbol search and historical K-lines across 13 markets — one free-key endpoint.
 
 A Model Context Protocol (**MCP**) server delivering stock market data across **13 markets** — China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany and Malaysia — live quotes, smart symbol search and historical K-lines.
 
-- **Zero-cost data**: powered by free public market-data APIs (Tencent for A-share/HK/US, Yahoo Finance for Taiwan), no API key, no quota
+- **Zero-cost data**: powered by free public market-data APIs (Tencent for A-share/HK/US, Yahoo Finance for Taiwan plus Japan / India / Canada / South Korea / UK / France / Singapore / Germany / Malaysia), no API key, no quota
 - **3 practical tools**: real-time quotes (batch up to 10), fuzzy search (Chinese name / pinyin / ticker code), historical candlesticks
 - **Dual transport**: `stdio` (local desktop clients) + `Streamable HTTP` (remote hosting on Apify Standby)
 - **Live on Apify Store**: https://apify.com/neeenja/mcp-stock-analyst — pay-per-call, no subscription
@@ -160,13 +164,17 @@ MIT
 
 ---
 
-<a name="简体中文"></a>
+<a id="简体中文"></a>
 
-# MCP Stock Analyst（简体中文）
+# 简体中文 · MCP Stock Analyst
+
+**当前版本：0.3.1** · 13 个市场 · 按次付费，无订阅
+
+> 13 个市场的实时报价、智能检索与历史 K 线，一个免费无需 API key 的端点。
 
 一个覆盖 **13 个市场** 的 MCP (Model Context Protocol) 服务器——A股/港股/美股/台股/日本/印度/加拿大/韩国/英国/法国/新加坡/德国/马来西亚——实时报价、智能搜索、历史K线。
 
-- **零成本数据源**：A股/港股/美股用腾讯免费公开行情接口，台湾股用 Yahoo Finance，均无需 API key，无配额限制
+- **零成本数据源**：A股/港股/美股用腾讯免费公开行情接口，台股及日本/印度/加拿大/韩国/英国/法国/新加坡/德国/马来西亚走 Yahoo Finance，均无需 API key，无配额限制
 - **三个实用工具**：实时报价（单次最多 10 个标的）、智能搜索（中文名/拼音/代码）、历史K线
 - **双传输模式**：`stdio`（本地桌面客户端）+ `Streamable HTTP`（Apify Standby 远程托管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次付费，无订阅
@@ -316,13 +324,17 @@ MIT
 
 ---
 
-<a name="繁體中文"></a>
+<a id="繁體中文"></a>
 
-# MCP Stock Analyst（繁體中文）
+# 繁體中文 · MCP Stock Analyst
+
+**目前版本：0.3.1** · 13 個市場 · 按次計費，無訂閱
+
+> 13 個市場的即時報價、智慧檢索與歷史 K 線，一個免費無需 API key 的端點。
 
 一個覆蓋 **13 個市場** 的 MCP (Model Context Protocol) 伺服器——A股/港股/美股/台股/日本/印度/加拿大/韓國/英國/法國/新加坡/德國/馬來西亞——即時報價、智慧搜尋、歷史K線。
 
-- **零成本資料源**：A股/港股/美股使用騰訊免費公開行情介面，台股使用 Yahoo Finance，皆無需 API key，無配額限制
+- **零成本資料源**：A股/港股/美股使用騰訊免費公開行情介面，台股及日本/印度/加拿大/韓國/英國/法國/新加坡/德國/馬來西亞走 Yahoo Finance，皆無需 API key，無配額限制
 - **三個實用工具**：即時報價（單次最多 10 個標的）、智慧搜尋（中文名稱/拼音/代碼）、歷史K線
 - **雙傳輸模式**：`stdio`（本機桌面用戶端）+ `Streamable HTTP`（Apify Standby 遠端託管）
 - **已上架 Apify Store**：https://apify.com/neeenja/mcp-stock-analyst —— 按次計費，無訂閱
@@ -472,7 +484,7 @@ MIT
 
 ---
 
-<a name="local-market-guides"></a>
+<a id="local-market-guides"></a>
 
 # Local Market Guides · 本地市場指南
 
