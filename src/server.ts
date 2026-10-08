@@ -28,15 +28,13 @@ export function createServer(): McpServer {
   });
 
   // ---------- 工具 1：实时报价 ----------
-  server.tool(
+  server.registerTool(
     'get_quote',
-    'Get real-time stock quote across 13 markets: China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia. Accepts codes like "600519", "00700" (HK), "AAPL" (US), "2330.TW" (Taiwan), "7203.T" (Japan), "RELIANCE.NS" (India), "005930.KS" (Korea), "HSBA.L" (UK), "MC.PA" (France), "SAP.DE" (Germany), "RY.TO" (Canada), "D05.SI" (Singapore), "1295.KL" (Malaysia). Multiple codes separated by comma.',
-    { codes: z.string().describe('Stock code(s), comma separated, e.g. "600519,00700,AAPL,2330.TW"') },
     {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
+      description:
+        'Get real-time stock quote across 13 markets: China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia. Accepts codes like "600519", "00700" (HK), "AAPL" (US), "2330.TW" (Taiwan), "7203.T" (Japan), "RELIANCE.NS" (India), "005930.KS" (Korea), "HSBA.L" (UK), "MC.PA" (France), "SAP.DE" (Germany), "RY.TO" (Canada), "D05.SI" (Singapore), "1295.KL" (Malaysia). Multiple codes separated by comma.',
+      inputSchema: { codes: z.string().describe('Stock code(s), comma separated, e.g. "600519,00700,AAPL,2330.TW"') },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     async ({ codes }) => {
       try {
@@ -62,18 +60,16 @@ export function createServer(): McpServer {
   );
 
   // ---------- 工具 2：智能搜索 ----------
-  server.tool(
+  server.registerTool(
     'search_stock',
-    'Search stock code/name across 13 markets (China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia). Supports Chinese name, pinyin abbreviation, partial code, or English ticker. Returns matched stocks with codes.',
     {
-      query: z.string().describe('Search keyword, e.g. "茅台", "GZMT", "600", "Tesla", "台积电", "TSMC", "2330"'),
-      limit: z.number().optional().default(8).describe('Max results (default 8)'),
-    },
-    {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
+      description:
+        'Search stock code/name across 13 markets (China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia). Supports Chinese name, pinyin abbreviation, partial code, or English ticker. Returns matched stocks with codes.',
+      inputSchema: {
+        query: z.string().describe('Search keyword, e.g. "茅台", "GZMT", "600", "Tesla", "台积电", "TSMC", "2330"'),
+        limit: z.number().optional().default(8).describe('Max results (default 8)'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     async ({ query, limit }) => {
       try {
@@ -90,19 +86,17 @@ export function createServer(): McpServer {
   );
 
   // ---------- 工具 3：历史K线 ----------
-  server.tool(
+  server.registerTool(
     'get_kline',
-    'Get historical K-line (candlestick) data for a stock across 13 markets (China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia). Day/week/month periods, up to 640 bars.',
     {
-      code: z.string().describe('Stock code, e.g. "600519", "sh600519" or "2330.TW" (Taiwan)'),
-      days: z.number().optional().default(120).describe('Number of bars (20-640, default 120)'),
-      period: z.enum(['day', 'week', 'month']).optional().default('day').describe('K-line period'),
-    },
-    {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
+      description:
+        'Get historical K-line (candlestick) data for a stock across 13 markets (China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia). Day/week/month periods, up to 640 bars.',
+      inputSchema: {
+        code: z.string().describe('Stock code, e.g. "600519", "sh600519" or "2330.TW" (Taiwan)'),
+        days: z.number().optional().default(120).describe('Number of bars (20-640, default 120)'),
+        period: z.enum(['day', 'week', 'month']).optional().default('day').describe('K-line period'),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     async ({ code, days, period }) => {
       try {
