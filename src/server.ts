@@ -13,6 +13,16 @@ import { searchStock } from './datasources/search.js';
 /** 腾讯市场（提供成交额）；其余（台湾 + 全球）走 Yahoo，只报成交量 */
 const TURNOVER_MARKETS = new Set(['sh', 'sz', 'bj', 'hk', 'us']);
 
+/** MCP tool hints — every tool here is a pure read of public market data (no writes,
+ * no side effects). Declaring the four hints is required by OpenAI's MCP directory
+ * and clears the M8ven "tools missing hints" finding. */
+const READONLY_ANNOTATIONS = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+} as const;
+
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'mcp-stock-analyst',
@@ -24,6 +34,7 @@ export function createServer(): McpServer {
     'get_quote',
     'Get real-time stock quote across 13 markets: China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia. Accepts codes like "600519", "00700" (HK), "AAPL" (US), "2330.TW" (Taiwan), "7203.T" (Japan), "RELIANCE.NS" (India), "005930.KS" (Korea), "HSBA.L" (UK), "MC.PA" (France), "SAP.DE" (Germany), "RY.TO" (Canada), "D05.SI" (Singapore), "1295.KL" (Malaysia). Multiple codes separated by comma.',
     { codes: z.string().describe('Stock code(s), comma separated, e.g. "600519,00700,AAPL,2330.TW"') },
+    READONLY_ANNOTATIONS,
     async ({ codes }) => {
       try {
         const list = codes.split(/[,，\s]+/).filter(Boolean).slice(0, 10);
@@ -55,6 +66,7 @@ export function createServer(): McpServer {
       query: z.string().describe('Search keyword, e.g. "茅台", "GZMT", "600", "Tesla", "台积电", "TSMC", "2330"'),
       limit: z.number().optional().default(8).describe('Max results (default 8)'),
     },
+    READONLY_ANNOTATIONS,
     async ({ query, limit }) => {
       try {
         const hits = await searchStock(query, limit);
@@ -78,6 +90,7 @@ export function createServer(): McpServer {
       days: z.number().optional().default(120).describe('Number of bars (20-640, default 120)'),
       period: z.enum(['day', 'week', 'month']).optional().default('day').describe('K-line period'),
     },
+    READONLY_ANNOTATIONS,
     async ({ code, days, period }) => {
       try {
         const klines = await getKline(code, days ?? 120, period ?? 'day');

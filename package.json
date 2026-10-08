@@ -11,7 +11,8 @@
     "build": "tsc",
     "start": "node build/index.js",
     "start:http": "node build/http.js",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "test": "npm run build && node --test tests/*.test.mjs"
   },
   "keywords": [
     "mcp",
