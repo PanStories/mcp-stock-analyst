@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.PanStories/mcp-stock-analyst",
+  "title": "MCP Stock Analyst",
+  "description": "Real-time quotes, fuzzy search and K-line history across 13 global stock markets.",
+  "version": "0.3.1",
+  "websiteUrl": "https://apify.com/neeenja/mcp-stock-analyst",
+  "repository": {
+    "url": "https://github.com/PanStories/mcp-stock-analyst",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://neeenja--mcp-stock-analyst.apify.actor/mcp"
+    }
+  ]
+}
