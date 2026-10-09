@@ -164,6 +164,10 @@ The Actor definition (`.actor/actor.json`) already enables **Standby mode** with
 
 MIT
 
+## Privacy
+
+Read-only and stateless — no accounts, no cookies, no trackers, and no personal data collected. See [`PRIVACY.md`](PRIVACY.md).
+
 ---
 
 <a id="简体中文"></a>
