@@ -1,6 +1,7 @@
 # MCP Stock Analyst 📈
 
 [![M8ven Trust Index](https://m8ven.ai/badge/mcp/panstories/mcp-stock-analyst)](https://m8ven.ai/mcp/panstories/mcp-stock-analyst)
+[![M8ven Verified](https://m8ven.ai/badge/mcp/panstories-mcp-stock-analyst-1d789r?variant=verified&v=5b95ce1e8cafc23cff5abb26d4ce737a)](https://m8ven.ai/mcp/panstories-mcp-stock-analyst-1d789r?s=readme)
 
 [English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文) | [🌍 Local Guides](#local-market-guides)
 
