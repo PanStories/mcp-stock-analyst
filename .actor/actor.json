@@ -3,7 +3,7 @@
     "name": "mcp-stock-analyst",
     "title": "MCP Stock Analyst",
     "description": "Remote MCP server for stock data: real-time quotes, fuzzy search (Chinese / pinyin / code / English ticker) and historical K-lines across 13 markets — China A-shares, Hong Kong, US, Taiwan, Japan, India, Canada, South Korea, UK, France, Singapore, Germany, Malaysia. Free upstream data sources (Tencent + Yahoo Finance), no API key required. Tools: get_quote, search_stock, get_kline.",
-    "version": "0.3",
+    "version": "0.3.1",
     "buildTag": "latest",
     "usesStandbyMode": true,
     "webServerMcpPath": "/mcp",
