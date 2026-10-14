@@ -1,0 +1,63 @@
+{
+  "slug": "mcp-stock-analyst",
+  "version": "0.3.1",
+  "repo_root": "C:\\Users\\USER\\WorkBuddy\\MCP\\mcp-stock-analyst",
+  "endpoint": "https://neeenja--mcp-stock-analyst.apify.actor/mcp",
+  "deployment": {
+    "apify_build": "0.3.8",
+    "apify_actor_version": "0.3",
+    "apify_status": "PUBLIC · Standby live (MCP endpoint returns HTTP 401 unauthenticated = alive)",
+    "verified_at": "2026-10-09"
+  },
+  "completed_actions": ["M8ven CVE fix (sdk 1.32.1)", "M8ven Verified badge", "privacy policy"],
+  "pending_actions": ["C1 (remaining free dirs Smithery/PulseMCP)", "C3 (launch post)", "D2 (price tweak — needs boss OK)"],
+  "directory_state": {
+    "live_free_auto": ["apify-store", "sartbot-featured", "glama", "lobehub", "mcpservers.org", "official-mcp-registry"],
+    "remaining_free_manual": ["smithery (needs smithery.yaml)", "pulsemcp/official-registry (server.json present)"],
+    "paid_avoided": ["mcp.so ($39 web-form; free GitHub-issue route optional)"],
+    "verified": "2026-10-09 via live web-search"
+  },
+  "tagline": {
+    "en": "Real-time quotes, fuzzy symbol search and historical K-lines across 13 markets — one free-key endpoint.",
+    "zh": "13 个市场的实时报价、智能检索与历史 K 线，一个免费无需 API key 的端点。",
+    "zh_hant": "13 個市場的即時報價、智慧檢索與歷史 K 線，一個免費無需 API key 的端點。"
+  },
+  "tools": [
+    { "name": "get_quote", "price": "0.02" },
+    { "name": "search_stock", "price": "0.005" },
+    { "name": "get_kline", "price": "0.02" }
+  ],
+  "surfaces": [
+    {
+      "id": "README",
+      "path": "README.md",
+      "require": [
+        "{version}",
+        "{endpoint}",
+        "{tagline.en}",
+        "{tagline.zh}",
+        "{tagline.zh_hant}",
+        "{tools.all}",
+        "{prices.all}"
+      ]
+    },
+    { "id": "CHANGELOG", "path": "CHANGELOG.md", "require": ["{version}"] },
+    { "id": "package json", "path": "package.json", "require": ["{version}"] },
+    { "id": "actor json", "path": ".actor/actor.json", "require": ["{tools.billable}"] },
+    { "id": "llms txt", "path": "llms.txt", "require": ["{endpoint}", "{tagline.en}"] }
+  ],
+  "autoPush": {
+    "enabled": true,
+    "targets": ["github", "apify"],
+    "requireStrictTrustGate": true,
+    "requirePreflightGreen": true,
+    "verifyLiveBeforeDone": true,
+    "priceChangesRequireBoss": true,
+    "neverAuto": [
+      "m8ven-claim",
+      "m8ven-connect-live",
+      "social-post",
+      "account-gated-submit"
+    ]
+  }
+}
